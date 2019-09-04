@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { TextField, RaisedButton, Card, CardHeader } from 'material-ui';
+import { TextField, Button, Card, CardHeader } from '@material-ui/core';
 import { get } from 'lodash';
 
 import { updatePassword } from '../state/user';
-import { colors } from '../lib/styles';
+import { colors, formButton } from '../lib/styles';
 
 
 const baseStyles = {
@@ -14,7 +14,7 @@ const baseStyles = {
     backgroundRepeat: 'repeat',
     height: '100%',
     minHeight: '900px',
-    padding: '10px'
+    padding: '10px',
   },
   loginBox: {
     margin: '0 auto 100px',
@@ -35,68 +35,99 @@ const baseStyles = {
 class UpdatePassword extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      password: '',
+      confirmPassword: '',
+    };
+
+    this.handleChange = this.handleChange.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleUpdatePassword = this.handleChange.bind(this, 'password');
+    this.handleUpdateConfirmPassword = this.handleChange.bind(this, 'confirmPassword');
   }
+
+  handleChange(field, evt) {
+    this.setState({ [field]: evt.target.value });
+  }
+
   handleUpdate() {
-    const password = this.refs.password.getValue();
-    const confirmPassword = this.refs.confirmPassword.getValue();
-    this.props.updatePassword(this.props.match.params.token, password, confirmPassword);
+    this.props.updatePassword(this.props.match.params.token, this.state.password, this.state.confirmPassword)
+      .then((res) => {
+        this.props.history.push('/app');
+        return res;
+      })
+      .catch((err) => {
+        console.log('pass update err', err);
+      });
   }
+
   render() {
     const { user } = this.props;
-
-    if(!user.updatePassword){
+    
+    if (!user.updatePassword) {
       const propErrors = {};
       let errorMsg = '';
-      if(user.updatePasswordError && user.updatePasswordError.details) {
-        user.updatePasswordError.details.forEach(detail => {
+      if (user.updatePasswordError && user.updatePasswordError.details) {
+        user.updatePasswordError.details.forEach((detail) => {
           propErrors[detail.path] = detail.message;
         });
-      }
-      else if(user.updatePasswordError) {
-        //TODO fetch can get better errors
+      } else if (user.updatePasswordError) {
+        // TODO fetch can get better errors
+        // eslint-disable-next-line
         errorMsg = get(user.updatePasswordError, 'content.message') || get(user.updatePasswordError, 'content.error') || user.updatePasswordError.message;
       }
 
       return (<div style={baseStyles.container} >
-          <Card style={baseStyles.loginBox}>
-            <CardHeader title="Update your password."/>
-            <div style={baseStyles.errorText}>{errorMsg}</div>
-            <div style={baseStyles.form}>
-              <TextField
-                className="login-field"
-                floatingLabelText="Password"
-                fullWidth={true}
-                errorText={propErrors.password}
-                ref="password"
-                type="password"
-              />
-              <TextField
-                className="login-field"
-                floatingLabelText="Confirm Password"
-                fullWidth={true}
-                errorText={propErrors.confirmPassword}
-                ref="confirmPassword"
-                type="password"
-              />
-              <RaisedButton
-                label="Update Password"
-                onTouchTap={this.handleUpdate}
-              />
-            </div>
-          </Card>
-        </div>);
+        <Card style={baseStyles.loginBox}>
+          <CardHeader title="Update your password." />
+          <div style={baseStyles.errorText}>{errorMsg}</div>
+          <div style={baseStyles.form}>
+            <TextField
+              className="login-field"
+              label="Password"
+              fullWidth={true}
+              onChange={this.handleUpdatePassword}
+              error={!!propErrors.password}
+              value={this.state.password}
+              type="password"
+            />
+            <TextField
+              className="login-field"
+              label="Confirm Password"
+              fullWidth={true}
+              error={!!propErrors.confirmPassword}
+              onChange={this.handleUpdateConfirmPassword}
+              value={this.state.confirmPassword}
+              type="password"
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handleUpdate}
+              style={formButton}
+              disabled={!this.state.password || !this.state.confirmPassword}
+            >Update Password</Button>
+          </div>
+        </Card>
+      </div>);
     }
 
     return (
       <div style={baseStyles.container} >
         <Card style={baseStyles.loginBox}>
-          <CardHeader>Your password has been reset.</CardHeader>
-          <Link to="/app"><RaisedButton label="Login" primary={false} /></Link>
+          <span>Your password has been reset.</span>
+          <Link to="/app">
+          <Button
+            variant="contained"
+            color="primary"
+          >Login</Button>
+          </Link>
         </Card>
       </div>);
   }
 }
+
 
 function mapStateToProps(state) {
   const { user } = state;

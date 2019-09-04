@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import { Toolbar } from '@material-ui/core';
 
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 import { logout } from '../state/user';
-
-
+import { ReactComponent as Meatball} from '../meatball.svg';
 
 import { colors } from '../lib/styles';
 
@@ -25,15 +24,11 @@ const baseStyles = {
     color: colors.white,
   },
   logo: {
-    height: '40px',
+    height: '68px',
     padding: '5px 5px 5px 10px',
     marginRight: '10px',
   }
 };
-
-
-
-
 
 
 
@@ -49,31 +44,33 @@ class Header extends Component {
   render() {
     const { user } = this.props;
 
-    let btn = (<Link to="/app"><RaisedButton
+    let btn = (<Link to="/app"><Button
             label="Login"
             primary={false}
           /></Link>);
 
     if(user.auth){
-      btn = (<RaisedButton
-            label="Logout"
+      btn = (<Button
             primary={false}
-            onTouchTap={this.handleLogout}
-          />);
+            onClick={this.handleLogout}
+          >Logout</Button>);
     }
     else if(user.verifyPending || user.authPending){
-      btn = '';
+      btn = (
+        <Link to="/login">
+        Login
+        </Link>);
     }
     return (
       <Toolbar style={baseStyles.header}>
-        <ToolbarGroup firstChild={true}>
+        <span firstChild={true}>
           <Link to="/">
-            <img alt="Home" style={baseStyles.logo} src="favicon.ico" />
+            <Meatball style={baseStyles.logo} />
           </Link>
-        </ToolbarGroup>
-        <ToolbarGroup>
+        </span>
+        <span>
         {btn}
-        </ToolbarGroup>
+        </span>
       </Toolbar>
     );
   }
@@ -83,6 +80,5 @@ function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
-
 
 export default connect(mapStateToProps, { logout })(Header);

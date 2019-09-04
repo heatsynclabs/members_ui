@@ -1,34 +1,40 @@
 {
-  "name": "generic-ui",
+  "name": "members_ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "cooldux": "^0.5.0",
-    "isomorphic-fetch": "^2.2.1",
-    "joi-browser": "^10.0.6",
-    "material-ui": "^0.20.1",
-    "pouchdb": "^6.1.2",
+    "@material-ui/core": "^4.4.0",
+    "cooldux": "^0.14.0",
+    "joi-browser": "^13.4.0",
+    "pouchdb": "^7.1.1",
     "pouchdb-upsert": "^2.2.0",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "react-redux": "^5.0.4",
-    "react-router-dom": "^4.2.2",
-    "react-tap-event-plugin": "^3.0.2",
-    "redux": "^3.6.0",
-    "redux-thunk": "^2.2.0"
-  },
-  "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.3",
-    "react-scripts": "^1.1.4"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-redux": "^7.1.1",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.1.1",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "PORT=3005 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

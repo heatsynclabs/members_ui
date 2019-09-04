@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Header from '../components/header';
 
 
 import { colors } from '../lib/styles';
@@ -21,9 +22,9 @@ const baseStyles = {
 class Home extends Component {
   render() {
     const { user } = this.props;
-    console.log('user state', user);
     return (
       <div style={baseStyles.container}>
+        <Header {...this.props}/>
         <h1>Welcome to the HeatSync Labs Members App.</h1>
       </div>
     );

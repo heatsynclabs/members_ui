@@ -24,13 +24,11 @@ const baseStyles = {
 
 class App extends Component {
   componentDidMount(){
-    console.log('cdm', this.props);
     this.props.getNewSignups();
     this.props.fetchStats();
   }
   render() {
     const { user, stats } = this.props;
-    console.log('auth render', this.props);
     let newUserList = '';
     let statsList = '';
 
@@ -49,10 +47,10 @@ class App extends Component {
       statsList = (
         <div>
         <h2>Cool Stats</h2>
-        <ul>Total Users: ${stats.stats.user_count}</ul>
-        <ul>New Users last 14 days: ${stats.stats.new_user_count}</ul>
-        <ul>Total User Certifications: ${stats.stats.user_certs}</ul>
-        <ul>User Certifications last 14 days: ${stats.stats.new_cert_count}</ul>
+        <ul>{`Total Users: ${stats.stats.user_count}`}</ul>
+        <ul>{`New Users last 14 days: ${stats.stats.new_user_count}`}</ul>
+        <ul>{`Total User Certifications: ${stats.stats.user_certs}`}</ul>
+        <ul>{`User Certifications last 14 days: ${stats.stats.new_cert_count}`}</ul>
 
         </div>
       )

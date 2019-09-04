@@ -14,3 +14,7 @@ export const colors = {
   errorRed: '#dc3636',
   white: '#ffffff',
 };
+
+export const formButton = {
+  margin: '5px',
+};

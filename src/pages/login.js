@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TextField, RaisedButton, Card, CardHeader } from 'material-ui';
+import { TextField, Button, Card, CardHeader } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { get } from 'lodash';
 
 import { auth } from '../state/user';
-import { colors } from '../lib/styles';
+import { colors, formButton } from '../lib/styles';
 
 
 const baseStyles = {
@@ -14,7 +14,7 @@ const baseStyles = {
     backgroundRepeat: 'repeat',
     height: '100%',
     minHeight: '900px',
-    padding: '10px'
+    padding: '10px',
   },
   loginBox: {
     height: '400px',
@@ -30,60 +30,81 @@ const baseStyles = {
   form: {
     margin: 'auto',
     padding: '35px 50px 50px',
-  }
+  },
 };
 
 class Login extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      email: '',
+      password: '',
+    };
+    this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
-  handleLogin() {
-    const email = this.refs.email.getValue();
-    const password = this.refs.password.getValue();
-    this.props.auth(email, password)
-      .then((ok) => {
-        this.props.history.push('/');
-      });
+
+  handleChange(evt) {
+    this.setState({ [evt.target.name]: evt.target.value });
   }
+
+  handleLogin() {
+    this.props.auth(this.state.email, this.state.password)
+      .then((ok) => {
+        console.log('auth ok', ok);
+        this.props.history.push('/app');
+      })
+      .catch((err) => {
+        console.log('err', err);
+      })
+  }
+
   render() {
     const { user } = this.props;
+    console.log('login user', user);
     const propErrors = {};
     let errorMsg = '';
-    if(user.authError && user.authError.details) {
-      user.authError.details.forEach(detail => {
+    if (user.authError && user.authError.details) {
+      user.authError.details.forEach((detail) => {
         propErrors[detail.path] = detail.message;
       });
-    }
-    else if(user.authError) {
-      //TODO fetch can get better errors
+    } else if (user.authError) {
+      // TODO fetch can get better errors
+      // eslint-disable-next-line
       errorMsg = get(user.authError, 'content.message') || get(user.authError, 'content.error') || user.authError.message;
     }
     return (
       <div style={baseStyles.container} >
         <Card style={baseStyles.loginBox}>
-          <CardHeader title="Sign In"/>
+          <CardHeader title="Sign In" />
           <div style={baseStyles.errorText}>{errorMsg}</div>
           <div style={baseStyles.form}>
             <TextField
               className="login-field"
-              floatingLabelText="Email"
+              label="email"
+              name="email"
               fullWidth={true}
-              errorText={propErrors.email}
-              ref="email"
+              error={!!propErrors.email}
+              onChange={this.handleChange}
+              value={this.state.email}
             />
             <TextField
               className="login-field"
-              floatingLabelText="Password"
+              label="Password"
+              name="password"
               fullWidth={true}
-              ref="password"
-              errorText={propErrors.password}
+              error={!!propErrors.password}
+              onChange={this.handleChange}
               type="password"
+              value={this.state.password}
             />
-            <RaisedButton
-              label="Sign In"
-              onTouchTap={this.handleLogin}
-            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handleLogin}
+              style={formButton}
+            >Sign In</Button>
             <p style={baseStyles.forgotPassword}><Link to="/signup">New User?</Link></p>
             <p style={baseStyles.forgotPassword}><Link to="/forgot">Forgot your password?</Link></p>
           </div>
@@ -93,11 +114,9 @@ class Login extends Component {
   }
 }
 
-
 function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
-
 
 export default connect(mapStateToProps, { auth })(Login);

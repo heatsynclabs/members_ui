@@ -18,16 +18,21 @@ const userSchema = {
 
 
 const {
-  authHandler,
   verifyEnd, verifyHandler,
   validateHandler,
   signupHandler,
   newSignupsHandler,
   passwordResetHandler,
-  updatePasswordHandler,
   initialStateCombined,
   reducerCombined
-} = combinedHandler(['auth', 'verify', 'validate', 'signup', 'passwordReset', 'updatePassword', 'newSignups'], 'user');
+} = combinedHandler(['verify', 'validate', 'signup', 'passwordReset', 'newSignups'], 'user');
+
+const {
+  authHandler,
+  updatePasswordHandler,
+  reducerCombined : combined2
+} = combinedHandler(['auth', 'updatePassword'], { throwErrors: true, namespace: 'user' });
+
 
 export function verify() {
   return dispatch => {
@@ -50,7 +55,6 @@ export function verify() {
 export function getNewSignups() {
   return function dispatcher(dispatch, getState) {
     const state = getState();
-    console.log('state', state);
     const token = get(state, 'user.auth.token', null);
 
     const promise = apiFetch('/users/new_signups', { headers: { Authorization: token } });
@@ -124,6 +128,7 @@ export function auth(email, password) {
       const options = {method: 'POST', body: { email, password } };
       resolve(apiFetch('/auth', options)
         .then((auth) => {
+            console.log('autedh', auth);
             return db.upsert('me', (doc) => {
               doc.token = auth.token;
               return doc;
@@ -145,6 +150,8 @@ export function logout() {
 
 const reducer = resetReducer(initialStateCombined, function(state, action) {
   state = reducerCombined(state, action);
+  state = combined2(state, action);
+
   switch (action.type) {
     case verifyEnd.type:
       return { ...state, auth: action.payload };
