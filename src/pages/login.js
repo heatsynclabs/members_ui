@@ -65,6 +65,11 @@ class Login extends Component {
     console.log('login user', user);
     const propErrors = {};
     let errorMsg = '';
+    // prefill user/pass in dev
+    if (process.env.NODE_ENV == "development") {
+      this.state.email = 'admin@example.com';
+      this.state.password = 'Testing1!';
+    }
     if (user.authError && user.authError.details) {
       user.authError.details.forEach((detail) => {
         propErrors[detail.path] = detail.message;

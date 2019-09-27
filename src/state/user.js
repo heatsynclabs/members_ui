@@ -22,10 +22,11 @@ const {
   validateHandler,
   signupHandler,
   newSignupsHandler,
+  allHandler,
   passwordResetHandler,
   initialStateCombined,
   reducerCombined
-} = combinedHandler(['verify', 'validate', 'signup', 'passwordReset', 'newSignups'], 'user');
+} = combinedHandler(['verify', 'validate', 'signup', 'all', 'passwordReset', 'newSignups'], 'user');
 
 const {
   authHandler,
@@ -59,6 +60,16 @@ export function getNewSignups() {
 
     const promise = apiFetch('/users/new_signups', { headers: { Authorization: token } });
     return newSignupsHandler(promise, dispatch);
+  };
+}
+
+export function getAll() {
+  return function dispatcher(dispatch, getState) {
+    const state = getState();
+    const token = get(state, 'user.auth.token', null);
+
+    const promise = apiFetch('/users/all', { headers: { Authorization: token } });
+    return allHandler(promise, dispatch);
   };
 }
 

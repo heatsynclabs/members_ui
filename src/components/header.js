@@ -44,12 +44,21 @@ class Header extends Component {
   render() {
     const { user } = this.props;
 
+    let nav = "";
     let btn = (<Link to="/app"><Button
             label="Login"
             primary={false}
-          /></Link>);
+          >Login</Button></Link>);
 
     if(user.auth){
+      nav = (<span><Link to="/app"><Button
+              label="Home"
+              primary={false}
+            >Home</Button></Link>
+            <Link to="/users"><Button
+              label="People"
+              primary={false}
+            >People</Button></Link></span>);
       btn = (<Button
             primary={false}
             onClick={this.handleLogout}
@@ -69,7 +78,8 @@ class Header extends Component {
           </Link>
         </span>
         <span>
-        {btn}
+          {nav}
+          {btn}
         </span>
       </Toolbar>
     );

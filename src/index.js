@@ -13,6 +13,7 @@ import PrivateRoute from './components/private-route';
 
 import ConnectedHome from './pages/home';
 import ConnectedApp from './pages/app';
+import ConnectedUsers from './pages/users';
 import ConnectedSignup from './pages/signup';
 import ConnectedValidate from './pages/validate';
 import ConnectedLogin from './pages/login';
@@ -34,6 +35,7 @@ render((
       <Router>
         <Route exact path="/" component={ConnectedHome} />
         <PrivateRoute path="/app" component={ConnectedApp} />
+        <PrivateRoute path="/users" component={ConnectedUsers} />
         <Route path="/login" component={ConnectedLogin} />
         <Route path="/signup" component={ConnectedSignup} />
         <Route path="/validate/:token" component={ConnectedValidate} />
