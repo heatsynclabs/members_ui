@@ -17,3 +17,5 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 
+#copy the dist file in order to use
+docker-compose.yml

@@ -1,4 +1,4 @@
-# UI
+# Members DB UI
 
 ## Features
 
@@ -14,11 +14,41 @@
 * Password reset page
 * Logged in home page
 
+## Normal Docker Dev Usage
 
+**Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
 
+First, create a local copy of your docker-compose:
+`cp docker-compose.dist.yml docker-compose.yml`
 
+And edit it as desired:
+`nano docker-compose.yml`
 
+  > **Warning, this docker image is intended for dev mode** attached to an npm-install-able project folder. ***Running this in critical/prod environments is strongly discouraged without lots of testing!!!***
 
+Take note of port numbers, API url, and volume paths.
+
+Review the `Dockerfile` so you know what's about to be booted. For example, the working directory, package.json, and CMD (including npm install and fixture-installation commands) lines which by default will affect your environment.
+
+Create the docker container for the api and database:
+`docker-compose up`
+
+To access the container's shell prompt:
+`docker exec -it members_ui /bin/sh`
+
+To view the container's website from the docker host machine: `http://localhost:3005`
+
+Note that this app depends on the API host pretty extensively, so again if you want a working app you probably want to check out the `members_app` repo.
+
+### Debugging Docker Dev Usage
+
+You can build this container directly with: `docker build -t members_ui .`
+You can run this container directly with: `docker run -it members_ui /bin/sh`
+You'll then have to manually run commands like `npm install` or `npm run start` (see Dockerfile and docker-compose.yml for various assumptions and env vars we use during normal runtime.)
+
+## Development
+
+  - Since this is a React app, console.log will output directly to your browser's Javascript console for debugging purposes.
 
 
 # create-react-app stuff :
