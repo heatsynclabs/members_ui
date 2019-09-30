@@ -53,7 +53,6 @@ class App extends Component {
     return (
         <div style={baseStyles.container}>
           <Header/>
-          <h1>Welcome to the HeatSync Labs Members App.</h1>
           {allUserList}
         </div>
     );

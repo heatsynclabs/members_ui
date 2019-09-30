@@ -20,6 +20,7 @@ import ConnectedLogin from './pages/login';
 import ConnectedForgot from './pages/forgot';
 import ConnectedUpdatePassword from './pages/updatepassword';
 import ConnectedEvents from './pages/events';
+import ConnectedEvent from './pages/event';
 
 import { verify } from './state/user';
 import './index.css';
@@ -37,7 +38,8 @@ render((
         <Route exact path="/" component={ConnectedHome} />
         <PrivateRoute path="/app" component={ConnectedApp} />
         <PrivateRoute path="/users" component={ConnectedUsers} />
-        <PrivateRoute path="/events" component={ConnectedEvents} />
+        <PrivateRoute exact path="/events" component={ConnectedEvents} />
+        <PrivateRoute exact path="/events/:event_id" component={ConnectedEvent} />
         <Route path="/login" component={ConnectedLogin} />
         <Route path="/signup" component={ConnectedSignup} />
         <Route path="/validate/:token" component={ConnectedValidate} />

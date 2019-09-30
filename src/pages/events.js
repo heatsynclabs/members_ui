@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Header from '../components/header';
 import { colors } from '../lib/styles';
-import { getAll } from '../state/events';
+import { getAll, formatDateRange } from '../state/events';
 
 const actionCreators = { getAll };
 
@@ -44,13 +45,15 @@ class App extends Component {
         <div>
         <h2>All Events</h2>
         <div>
-          {events.all.map((e) =>
-            <div key={e.id} style={baseStyles.card}>
-            <h5><a href="/events/{e.id}">{e.name}</a></h5>
-            {e.description} <br/>
-            {e.start_date} - {e.end_date} ({e.frequency}) <br/>
-            {e.location}
-            </div>
+          {events.all.map((e) => {
+            const dateRange = formatDateRange(e);
+            return <div key={e.id} style={baseStyles.card}>
+              <h5><Link to={`/events/${e.id}`}>{e.name}</Link></h5>
+              {dateRange.full_date_string} ({e.frequency}) <br/>
+              <i>{e.location}</i>
+              <p>{e.description}</p>
+              </div>;
+            }
           )}
         </div>
         </div>
