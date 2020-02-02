@@ -4,6 +4,7 @@
 // TODO: Remove this atrocity that exists
 // solely because create-react-app doesnt let us set env vars
 function getApiUrl() {
+  // NOTE: the API URL should never have a trailing slash.
   if (process.env.REACT_APP_MEMBERS_API_URL) {
     return process.env.REACT_APP_MEMBERS_API_URL;
   } else if (window.location.hostname.includes('cooldomain')) {

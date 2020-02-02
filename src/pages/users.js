@@ -44,7 +44,7 @@ class App extends Component {
         <div>
         <h2>All People</h2>
         <div>
-          {user.all.map((u) => <div key={u.id} style={baseStyles.card}><img src={`https://www.gravatar.com/avatar/${u.gravatar}?s=50`} height={50} width={50} alt={u.name} /> {u.name} <br/> Level: {u.member_level} <br/> <a href="mailto:{u.email}">{u.email}</a> <br/> {u.created_at}</div>)}
+          {user.all.map((u) => <div key={u.id} style={baseStyles.card}><img src={`https://www.gravatar.com/avatar/${u.gravatar}?s=50`} height={50} width={50} alt={u.name} /> {u.name} <br/> Level: {u.member_level} <br/> <a href={`mailto:${u.email}`}>{u.email}</a> <br/> {u.created_at}</div>)}
         </div>
         </div>
       )
