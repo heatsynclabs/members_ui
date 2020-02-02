@@ -20,7 +20,7 @@ install:
   - docker-compose up -d
 
 script:
-  - docker exec -it members_ui sh -c 'wget -q -O - localhost:3005 && echo "SUCCESS"'
+  - docker exec -it members_ui sh -c 'sleep 30s && wget -q -O - localhost:3005 && echo "SUCCESS"'
 
 before_deploy:
   - docker tag members_ui_members_ui:latest registry.heroku.com/$HEROKU_APP/web
