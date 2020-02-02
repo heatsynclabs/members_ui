@@ -20,4 +20,4 @@ COPY . /home/app
 #RUN npm run build
 RUN npm install
 
-CMD export PATH=$PATH:$(pwd)/node_modules/.bin && npm run start
+CMD ./docker-run.sh
