@@ -6,5 +6,6 @@ services:
     ports:
       - "3005:3005" # Currently in package.json we only start with PORT=3005
     environment:
+      PORT: 3005
       NODE_ENV: "development"
       REACT_APP_MEMBERS_API_URL: "http://localhost:3004" # use what's visible from the host machine
