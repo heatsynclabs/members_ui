@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Header from '../components/header';
 import { colors } from '../lib/styles';
-import { getAll } from '../state/user';
+import { getAll, formatDateRange } from '../state/events';
 
 const actionCreators = { getAll };
 
@@ -36,15 +37,24 @@ class App extends Component {
     this.props.getAll();
   }
   render() {
-    const { user } = this.props;
-    let allUserList = '';
+    const { events } = this.props;
+    let allEventList = '';
 
-    if(user.all) {
-      allUserList = (
+    if(events.all) {
+      allEventList = (
         <div>
-        <h2>All People</h2>
+        <h2>All Events</h2>
         <div>
-          {user.all.map((u) => <div key={u.id} style={baseStyles.card}><img src={`https://www.gravatar.com/avatar/${u.gravatar}?s=50`} height={50} width={50} alt={u.name} /> {u.name} <br/> Level: {u.member_level} <br/> <a href="mailto:{u.email}">{u.email}</a> <br/> {u.created_at}</div>)}
+          {events.all.map((e) => {
+            const dateRange = formatDateRange(e);
+            return <div key={e.id} style={baseStyles.card}>
+              <h5><Link to={`/events/${e.id}`}>{e.name}</Link></h5>
+              {dateRange.full_date_string} ({e.frequency}) <br/>
+              <i>{e.location}</i>
+              <p>{e.description}</p>
+              </div>;
+            }
+          )}
         </div>
         </div>
       )
@@ -53,7 +63,7 @@ class App extends Component {
     return (
         <div style={baseStyles.container}>
           <Header/>
-          {allUserList}
+          {allEventList}
         </div>
     );
   }
@@ -61,8 +71,8 @@ class App extends Component {
 
 
 function mapStateToProps(state) {
-  const { user } = state;
-  return { user };
+  const { events } = state;
+  return { events };
 }
 
 

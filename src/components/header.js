@@ -51,14 +51,30 @@ class Header extends Component {
           >Login</Button></Link>);
 
     if(user.auth){
-      nav = (<span><Link to="/app"><Button
-              label="Home"
-              primary={false}
-            >Home</Button></Link>
-            <Link to="/users"><Button
-              label="People"
-              primary={false}
-            >People</Button></Link></span>);
+      nav = (
+          <span>
+            <Link to="/app">
+              <Button
+                label="Home"
+                primary={false}>
+                Home
+              </Button>
+            </Link>
+            <Link to="/users">
+              <Button
+                label="People"
+                primary={false}>
+                People
+              </Button>
+            </Link>
+            <Link to="/events">
+              <Button
+                label="Events"
+                primary={false}>
+                Events
+              </Button>
+            </Link>
+          </span>);
       btn = (<Button
             primary={false}
             onClick={this.handleLogout}

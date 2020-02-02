@@ -5,7 +5,7 @@ class AuthWrapper extends React.Component {
 
   componentDidUpdate() {
     const { user } = this.props;
-    console.log('cdm', user);
+    // console.log('cdm', user);
     if ((!user.verifyPending && !user.authPending) && !user.auth) {
       this.props.history.push('/login');
     }
