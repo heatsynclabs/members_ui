@@ -9,4 +9,4 @@ services:
       NODE_ENV: "development"
       REACT_APP_MEMBERS_API_URL: "http://localhost:3004" # use what's visible from the host machine
     volumes:
-      - /home/YOUR_USER/YOUR_PATH/THIS_FOLDER:/home/app
+      - .:/home/app

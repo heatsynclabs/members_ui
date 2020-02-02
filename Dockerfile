@@ -5,7 +5,7 @@ RUN apk update
 
 RUN apk add \
   build-base \
-  python=2.7.16-r1
+  python2
 
 WORKDIR /home/app
 
@@ -18,6 +18,6 @@ COPY package.json /home/app/
 COPY . /home/app
 
 #RUN npm run build
-#RUN npm install
+RUN npm install
 
-CMD npm install && npm run start
+CMD export PATH=$PATH:$(pwd)/node_modules/.bin && npm run start
