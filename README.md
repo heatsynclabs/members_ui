@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.com/heatsynclabs/members_ui.svg?branch=master)](https://travis-ci.com/heatsynclabs/members_ui)
 
-This is the UI component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info.
+This is the UI component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info and general readme information.
 
 ## Features
 
