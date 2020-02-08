@@ -1,6 +1,9 @@
 {
   "name": "members_ui",
   "version": "0.1.0",
+  "description": "HSL Members UI",
+  "author": "Iced Development, LLC",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.4.0",

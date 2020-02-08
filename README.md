@@ -1,8 +1,14 @@
-# Members DB UI
+# Member Management UI
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+[![Build Status](https://travis-ci.com/heatsynclabs/members_ui.svg?branch=master)](https://travis-ci.com/heatsynclabs/members_ui)
+
+This is the UI component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info.
 
 ## Features
 
-* Uses iceddev api project
+* JS frontent that connects directly to the members_api backend
 * all of create-react-app features
 * react-router
 * redux
@@ -48,8 +54,7 @@ You'll then have to manually run commands like `npm install` or `npm run start` 
 
 ## Development
 
-  - Since this is a React app, console.log will output directly to your browser's Javascript console for debugging purposes.
-
+Since this is a React app, console.log will output directly to your browser's Javascript console for debugging purposes.
 
 # create-react-app stuff :
 
