@@ -14,14 +14,12 @@
 
 import { combinedHandler } from 'cooldux';
 
-import { omit, get } from 'lodash';
+import { get } from 'lodash';
 import { apiFetch } from '../lib/fetch';
-import { getAuthOptions } from './util';
 
 const {
   allHandler,
   oneHandler,
-  initialStateCombined,
   reducerCombined
 } = combinedHandler(['all','one'], 'events');
 
@@ -67,9 +65,9 @@ export function formatDateRange(event) {
   }
 
   if (event.end_date != null) {
-    if (out.start_date_string == out.end_date_string && out.start_time_string == out.end_time_string) {
+    if (out.start_date_string === out.end_date_string && out.start_time_string === out.end_time_string) {
       out.full_date_string = out.start_date_string+" "+out.start_time_string;
-    } else if (out.start_date_string == out.end_date_string) {
+    } else if (out.start_date_string === out.end_date_string) {
       out.full_date_string = out.start_date_string+" "+out.start_time_string+" - "+out.end_time_string;
     } else {
       out.full_date_string = out.start_date_string+" "+out.start_time_string+" - "+out.end_date_string+" "+out.end_time_string;

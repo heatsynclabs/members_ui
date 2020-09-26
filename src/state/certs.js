@@ -19,8 +19,6 @@ import { getAuthOptions } from './util';
 
 const {
   certsHandler,
-  userCertsHandler,
-  initialStateCombined,
   reducerCombined
 } = combinedHandler(['certs', 'userCerts'], 'certs');
 

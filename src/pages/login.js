@@ -14,15 +14,17 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TextField, Button, Card, CardHeader } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Button, Card, CircularProgress, TextField } from '@material-ui/core';
 import { get } from 'lodash';
 
-import { auth } from '../state/user';
-import { colors, formButton } from '../lib/styles';
+import { auth, oauthStart, tokenLogin, emailLogin } from '../state/user';
+import { colors } from '../lib/styles';
+import Joi from '@hapi/joi';
+
+const emailCheck = Joi.string().email({ tlds: {allow: false} });
 
 
-const baseStyles = {
+const styles = {
   container: {
     backgroundAttachment: 'scroll',
     backgroundRepeat: 'repeat',
@@ -45,45 +47,66 @@ const baseStyles = {
     margin: 'auto',
     padding: '35px 50px 50px',
   },
+  loginBrand: {
+    height: '18px',
+    width: '18px',
+    marginRight: '15px'
+  },
+  loginBrandText: {
+    fontSize: '1em',
+    width: '100%',
+    textTransform: 'none',
+    textAlign: 'left',
+  }
 };
 
 class Login extends Component {
+
   constructor(props) {
     super(props);
-
     this.state = {
+      useEmail: false,
       email: '',
-      password: '',
+      emailValid: false,
+      sent: false,
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  handleChange(evt) {
-    this.setState({ [evt.target.name]: evt.target.value });
-  }
-
-  handleLogin() {
-    this.props.auth(this.state.email, this.state.password)
+  componentDidMount() {
+    const { token } = this.props.match.params;
+    if(token) {
+      this.props.tokenLogin(token)
       .then((ok) => {
         console.log('auth ok', ok);
         this.props.history.push('/app');
       })
       .catch((err) => {
         console.log('err', err);
-      })
+        this.props.oauthStart();
+      });
+      return;
+    }
+    this.props.oauthStart();
   }
+
+  textChange = (e) => {
+    console.log(e.value, e.target, e.target.value);
+    const email = e.target.value;
+    const emailValid = !emailCheck.validate(email).error;
+    this.setState({email, emailValid});
+  }
+
+  sendEmail = async () => {
+    await this.props.emailLogin(this.state.email);
+    this.setState({sent: true});
+  }
+
 
   render() {
     const { user } = this.props;
     console.log('login user', user);
     const propErrors = {};
     let errorMsg = '';
-    // prefill user/pass in dev
-    if (process.env.NODE_ENV == "development") {
-      this.state.email = 'admin@example.com';
-      this.state.password = 'Testing1!';
-    }
     if (user.authError && user.authError.details) {
       user.authError.details.forEach((detail) => {
         propErrors[detail.path] = detail.message;
@@ -94,40 +117,88 @@ class Login extends Component {
       errorMsg = get(user.authError, 'content.message') || get(user.authError, 'content.error') || user.authError.message;
     }
     return (
-      <div style={baseStyles.container} >
-        <Card style={baseStyles.loginBox}>
-          <CardHeader title="Sign In" />
-          <div style={baseStyles.errorText}>{errorMsg}</div>
-          <div style={baseStyles.form}>
-            <TextField
-              className="login-field"
-              label="email"
-              name="email"
-              fullWidth={true}
-              error={!!propErrors.email}
-              onChange={this.handleChange}
-              value={this.state.email}
-            />
-            <TextField
-              className="login-field"
-              label="Password"
-              name="password"
-              fullWidth={true}
-              error={!!propErrors.password}
-              onChange={this.handleChange}
-              type="password"
-              value={this.state.password}
-            />
-            <Button
+      <div style={styles.container} >
+
+          <div style={styles.errorText}>{errorMsg}</div>
+
+        <Card style={styles.loginBox}>
+        {this.state.sent ? (
+          <div>Please check your email for a login link.</div>
+        ):  (
+        <div>
+        {user.oauthStart ? (
+            <div style={styles.form}>
+
+            {get(user, 'oauthStart.providers.google') ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => document.location.href = user.oauthStart.providers.google.url}
+                style={{margin: '10px', width: '220px', color: '#757575', backgroundColor: '#FFF'}}
+              ><img alt="google" style={styles.loginBrand} src="/images/oauth/google.svg"/>
+              <span style={styles.loginBrandText}>Sign in with Google</span></Button>
+            ) : ''}
+            
+            <br/>
+            {get(user, 'oauthStart.providers.github') ? (
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => document.location.href = user.oauthStart.providers.github.url}
+                style={{margin: '10px', width: '220px', color: '#FFF', backgroundColor: '#333'}}
+              ><img alt="github" style={styles.loginBrand} src="/images/oauth/github.svg"/>
+              <span style={styles.loginBrandText}>Sign in with Github</span></Button>
+              <br/>
+            </>
+            ) : ''}
+            {get(user, 'oauthStart.providers.facebook') ? (
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => document.location.href = user.oauthStart.providers.facebook.url}
+                style={{margin: '10px', width: '220px', color: '#FFF', backgroundColor: '#3b5998'}}
+              ><img alt="facebook" style={styles.loginBrand} src="/images/oauth/facebook.svg"/>
+              <span style={styles.loginBrandText}>Sign in with Facebook</span></Button>
+              <br/>
+            </>
+            ) : ''}
+            {!this.state.useEmail ? (<Button
               variant="contained"
               color="primary"
-              onClick={this.handleLogin}
-              style={formButton}
-            >Sign In</Button>
-            <p style={baseStyles.forgotPassword}><Link to="/signup">New User?</Link></p>
-            <p style={baseStyles.forgotPassword}><Link to="/forgot">Forgot your password?</Link></p>
+              onClick={() => this.setState({useEmail: true})}
+              style={{margin: '10px', width: '220px', color: '#FFF', backgroundColor: '#db4437'}}
+            ><img alt="email" style={styles.loginBrand} src="/images/oauth/mail.svg"/>
+            <span style={styles.loginBrandText}>Sign in with Email</span></Button>) : ''}
+            {this.state.useEmail ? (
+              <div>
+                <TextField
+                  value={this.state.email}
+                  label="email"
+                  onChange={this.textChange}
+                  autoFocus
+                  style={{margin: '10px', width: '220px', color: 'black'}}
+                />
+                <br/>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={!this.state.emailValid}
+                  onClick={this.sendEmail}
+                  style={{margin: '10px', width: '180px', color: '#FFF', backgroundColor: this.state.emailValid ? '#db4437' : '#DDD'}}
+                >
+                  <img alt="email" style={styles.loginBrand} src="/images/oauth/mail.svg"/>Send Link
+                </Button>
+              </div>
+            ) : ''}
+          
           </div>
-        </Card>
+          
+          ) : <CircularProgress/>}
+          </div>)}
+          
+          </Card>
       </div>
     );
   }
@@ -138,4 +209,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { auth })(Login);
+export default connect(mapStateToProps, { auth, oauthStart, tokenLogin, emailLogin })(Login);

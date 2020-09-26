@@ -13,15 +13,11 @@
 // limitations under the License.
 
 import { combinedHandler, resetReducer, reset } from 'cooldux';
-import PouchDB from 'pouchdb';
-import PouchUpsert from 'pouchdb-upsert';
 import { omit, get } from 'lodash';
 import Joi from 'joi-browser';
 import validator from './validator';
 import { apiFetch } from '../lib/fetch';
 
-PouchDB.plugin(PouchUpsert);
-let db = new PouchDB('user');
 
 const userSchema = {
   password: Joi.string().alphanum().min(8).max(10000).required(),
@@ -29,18 +25,20 @@ const userSchema = {
   email: Joi.string().email().required(),
 };
 
-
-
 const {
   verifyEnd, verifyHandler,
+  tokenLoginEnd, tokenLoginHandler,
+  logoutEnd, logoutHandler,
   validateHandler,
   signupHandler,
   newSignupsHandler,
+  emailLoginHandler,
   allHandler,
   passwordResetHandler,
   initialStateCombined,
+  oauthStartHandler,
   reducerCombined
-} = combinedHandler(['verify', 'validate', 'signup', 'all', 'passwordReset', 'newSignups'], 'user');
+} = combinedHandler(['verify', 'validate', 'signup', 'all', 'passwordReset', 'newSignups', 'oauthStart', 'tokenLogin', 'logout', 'emailLogin'], 'user');
 
 const {
   authHandler,
@@ -51,20 +49,38 @@ const {
 
 export function verify() {
   return dispatch => {
-    let token;
-    const promise = db.get('me')
-      .then((me) =>{
-        token = me.token;
-        return apiFetch('/users/me', {
-          headers: { Authorization: me.token }
-        });
-      })
-      .then(auth => {
-        auth.token = token;
-        return auth;
-      });
+    const promise = apiFetch('/users/me');
     return verifyHandler(promise, dispatch);
-  };
+  }
+}
+
+export function emailLogin(email) {
+  return dispatch => {
+    const promise = apiFetch('/users/email_login', {method: 'POST', body: {email}});
+    return emailLoginHandler(promise, dispatch);
+  }
+}
+
+export function oauthStart() {
+  return dispatch => {
+    const promise = apiFetch('/users/oauth_start');
+    return oauthStartHandler(promise, dispatch);
+  }
+}
+
+export function logout() {
+  return dispatch => {
+    const promise = apiFetch('/users/logout');
+    dispatch(reset());
+    return logoutHandler(promise, dispatch);
+  }
+}
+
+export function tokenLogin(token) {
+  return dispatch => {
+    const promise = apiFetch('/users/oauth_token', {method: 'POST', body: {token}});
+    return tokenLoginHandler(promise, dispatch);
+  }
 }
 
 export function getNewSignups() {
@@ -151,25 +167,9 @@ export function auth(email, password) {
         return reject(valid.error);
       }
       const options = {method: 'POST', body: { email, password } };
-      resolve(apiFetch('/auth', options)
-        .then((auth) => {
-            console.log('autedh', auth);
-            return db.upsert('me', (doc) => {
-              doc.token = auth.token;
-              return doc;
-            }).then(() => auth);
-        }));
+      resolve(apiFetch('/auth', options));
     });
     return authHandler(promise, dispatch);
-  };
-}
-
-export function logout() {
-  return (dispatch) => {
-    return db.destroy().then(() => {
-      db = new PouchDB('user');
-      dispatch(reset());
-    });
   };
 }
 
@@ -180,6 +180,10 @@ const reducer = resetReducer(initialStateCombined, function(state, action) {
   switch (action.type) {
     case verifyEnd.type:
       return { ...state, auth: action.payload };
+    case tokenLoginEnd.type:
+      return { ...state, auth: action.payload };
+    case logoutEnd.type:
+      return { ...state, auth: null };
     default:
       return state;
   }

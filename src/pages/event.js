@@ -16,7 +16,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Header from '../components/header';
-import { colors } from '../lib/styles';
 import { getOne, formatDateRange } from '../state/events';
 
 const actionCreators = { getOne };

@@ -47,6 +47,8 @@ export default function handledFetch(path, options){
 export function apiFetch(path, options = {}) {
   if(typeof options.body === 'object'){
     options.body = JSON.stringify(options.body);
+    options.headers = options.headers || {};
+    options.headers['Content-Type'] = 'application/json';
   }
   Object.assign(options, { credentials: 'include' });
 

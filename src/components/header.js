@@ -24,7 +24,7 @@ import { ReactComponent as Meatball} from '../meatball.svg';
 
 import { colors } from '../lib/styles';
 
-const baseStyles = {
+const styles = {
   header: {
     backgroundColor: colors.darkAccent,
     padding: '25px',
@@ -41,7 +41,10 @@ const baseStyles = {
     height: '68px',
     padding: '5px 5px 5px 10px',
     marginRight: '10px',
-  }
+  },
+  menuButton: {
+    margin: '5px',
+  },
 };
 
 
@@ -59,52 +62,48 @@ class Header extends Component {
     const { user } = this.props;
 
     let nav = "";
-    let btn = (<Link to="/app"><Button
+    let btn = (<Link to="/login"><Button
             label="Login"
-            primary={false}
           >Login</Button></Link>);
 
     if(user.auth){
       nav = (
           <span>
-            <Link to="/app">
+            <Link to="/app" style={styles.menuButton}>
               <Button
-                label="Home"
-                primary={false}>
+                label="Home">
                 Home
               </Button>
             </Link>
-            <Link to="/users">
+            <Link to="/users" style={styles.menuButton}>
               <Button
-                label="People"
-                primary={false}>
+                label="People">
                 People
               </Button>
             </Link>
-            <Link to="/events">
+            <Link to="/events" style={styles.menuButton}>
               <Button
-                label="Events"
-                primary={false}>
+                label="Events">
                 Events
               </Button>
             </Link>
           </span>);
       btn = (<Button
-            primary={false}
+            style={styles.menuButton}
             onClick={this.handleLogout}
           >Logout</Button>);
     }
     else if(user.verifyPending || user.authPending){
       btn = (
-        <Link to="/login">
+        <Link to="/login" style={styles.menuButton}>
         Login
         </Link>);
     }
     return (
-      <Toolbar style={baseStyles.header}>
-        <span firstChild={true}>
+      <Toolbar style={styles.header}>
+        <span>
           <Link to="/">
-            <Meatball style={baseStyles.logo} />
+            <Meatball style={styles.logo} />
           </Link>
         </span>
         <span>

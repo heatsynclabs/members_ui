@@ -57,6 +57,7 @@ render((
         <Route path="/signup" component={ConnectedSignup} />
         <Route path="/validate/:token" component={ConnectedValidate} />
         <Route path="/reset/:token" component={ConnectedUpdatePassword} />
+        <Route path="/login/:token" component={ConnectedLogin} />
         <Route path="/forgot" component={ConnectedForgot} />
       </Router>
     </MuiThemeProvider>
