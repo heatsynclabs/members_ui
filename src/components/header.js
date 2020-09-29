@@ -87,6 +87,12 @@ class Header extends Component {
                 Events
               </Button>
             </Link>
+            <Link to="/certs" style={styles.menuButton}>
+              <Button
+                label="Certs">
+                Certs
+              </Button>
+            </Link>
           </span>);
       btn = (<Button
             style={styles.menuButton}

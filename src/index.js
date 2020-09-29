@@ -18,6 +18,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { promiseMiddleware } from 'cooldux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import reducers from './state';
@@ -34,13 +35,15 @@ import ConnectedForgot from './pages/forgot';
 import ConnectedUpdatePassword from './pages/updatepassword';
 import ConnectedEvents from './pages/events';
 import ConnectedEvent from './pages/event';
+import ConnectedCerts from './pages/certs';
+import ConnectedCertDetails from './pages/cert_details';
 
 import { verify } from './state/user';
 import './index.css';
 import theme from './theme';
 
 
-const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+const store = createStore(reducers, applyMiddleware(thunkMiddleware, promiseMiddleware));
 
 store.dispatch(verify());
 
@@ -49,10 +52,14 @@ render((
     <MuiThemeProvider theme={theme}>
       <Router>
         <Route exact path="/" component={ConnectedHome} />
+
         <PrivateRoute path="/app" component={ConnectedApp} />
         <PrivateRoute path="/users" component={ConnectedUsers} />
         <PrivateRoute exact path="/events" component={ConnectedEvents} />
         <PrivateRoute exact path="/events/:event_id" component={ConnectedEvent} />
+        <PrivateRoute exact path="/certs" component={ConnectedCerts} />
+        <PrivateRoute exact path="/certs/:id" component={ConnectedCertDetails} />
+
         <Route path="/login" component={ConnectedLogin} />
         <Route path="/signup" component={ConnectedSignup} />
         <Route path="/validate/:token" component={ConnectedValidate} />

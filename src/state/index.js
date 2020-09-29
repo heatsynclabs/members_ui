@@ -17,13 +17,15 @@ import { combineReducers } from 'redux';
 import user from './user';
 import stats from './stats';
 import certs from './certs';
+import userCerts from './userCerts';
 import events from './events';
 
 const reducers = combineReducers({
   user,
   stats,
   certs,
-  events
+  events,
+  userCerts,
 });
 
 export default reducers;
