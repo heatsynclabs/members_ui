@@ -20,11 +20,12 @@ export default function handledFetch(path, options){
 
   return fetch(path, options)
     .then((res) => {
+      const contentType = res.headers.get("content-type");
+
       if (res.status >= 400) {
         const err = new Error("Bad response from server");
         err.status = res.status;
-        const contentType = res.headers.get("content-type");
-
+        
         if(startsWith(contentType, 'application/json')){
           return res.json()
           .then(content => {
@@ -39,9 +40,15 @@ export default function handledFetch(path, options){
           throw err;
         });
       }
-      return res;
-    });
 
+      if (startsWith(contentType, 'application/json')) {
+        return res.json();
+      } else if (startsWith(contentType, 'text')) {
+        return res.text();
+      }
+
+      return res.blob();
+    });
 }
 
 export function apiFetch(path, options = {}) {
@@ -59,11 +66,5 @@ export function apiFetch(path, options = {}) {
 
   Object.assign(options, { credentials: 'include' });
 
-  return handledFetch(`${config.API_URL}${path}${qs}`, options)
-    .then(res => {
-      if(res.status === 200){
-        return res.json();
-      }
-      return true;
-    });
+  return handledFetch(`${config.API_URL}${path}${qs}`, options);
 }

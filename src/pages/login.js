@@ -19,7 +19,7 @@ import { get } from 'lodash';
 
 import { auth, oauthStart, tokenLogin, emailLogin } from '../state/user';
 import { colors } from '../lib/styles';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 
 const emailCheck = Joi.string().email({ tlds: {allow: false} });
 

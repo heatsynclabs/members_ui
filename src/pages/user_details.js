@@ -27,9 +27,8 @@ import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Header from '../components/header';
 import { colors } from '../lib/styles';
-import { getAll } from '../state/user';
+import { getOne } from '../state/user';
 
-const actionCreators = { getAll };
 
 const styles = {
   container: {
@@ -57,16 +56,19 @@ const styles = {
 
 class App extends Component {
   componentDidMount(){
-    this.props.getAll({orderBy: 'name', sortOrder: 'asc'});
+    const { id } = this.props.match.params;
+    console.log('cdm', id, this.props);
+    this.props.getOne(id);
   }
   render() {
     const { user } = this.props;
-    // console.log('props', this.props);
+    const aUser = user.getOne;
+    console.log('props', this.props);
     return (
         <div style={styles.container}>
           <Header/>
           <h2>All People</h2>
-          {!user.allPending ? (
+          {aUser ? (
             <TableContainer style={styles.tableContainer}>
               <Table aria-label="simple table">
                 <TableHead>
@@ -80,26 +82,26 @@ class App extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {map(user.getAll, (row) => (
-                    <StyledTableRow key={row.id}>
-                      <TableCell><Avatar src={`https://www.gravatar.com/avatar/${row.gravatar}?s=50`} /></TableCell>
+                  
+                    <StyledTableRow key={aUser.id}>
+                      <TableCell><Avatar src={`https://www.gravatar.com/avatar/${aUser.gravatar}?s=50`} /></TableCell>
                       <TableCell component="th" scope="row">
-                        <Link to={`/users/${row.id}`}>{row.name || 'NO NAME SET'}</Link>
+                        <Link to={`/certs/${aUser.id}`}>{aUser.name || 'NO NAME SET'}</Link>
                       </TableCell>
                       <TableCell>
-                        <div>{map(row.user_certs, (c, idx) => {
-                          return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{row.user_certs.length > (idx + 1) ? ',' : ''} </Link>
+                        <div>{map(aUser.user_certs, (c, idx) => {
+                          return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{aUser.user_certs.length > (idx + 1) ? ',' : ''} </Link>
                         })}</div>
                       </TableCell>
                       <TableCell>
-                        <div>{map(row.instructing, (c, idx) => {
-                          return <span key={c.f1}>{c.f2}{row.instructing.length > (idx + 1) ? ',' : ''} </span>
+                        <div>{map(aUser.instructing, (c, idx) => {
+                          return <span key={c.f1}>{c.f2}{aUser.instructing.length > (idx + 1) ? ',' : ''} </span>
                         })}</div>
                       </TableCell>
-                      <TableCell>{row.user_cards.length ? 'Y' : 'N'}</TableCell>
-                      <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-US') : ''}</TableCell>
+                      <TableCell>{aUser.user_cards.length ? 'Y' : 'N'}</TableCell>
+                      <TableCell>{aUser.created_at ? new Date(aUser.created_at).toLocaleDateString('en-US') : ''}</TableCell>
                     </StyledTableRow>
-                  ))}
+                  
                 </TableBody>
               </Table>
             </TableContainer>
@@ -116,4 +118,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, actionCreators)(App);
+export default connect(mapStateToProps, { getOne })(App);

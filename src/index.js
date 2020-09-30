@@ -25,18 +25,19 @@ import reducers from './state';
 
 import PrivateRoute from './components/private-route';
 
-import ConnectedHome from './pages/home';
-import ConnectedApp from './pages/app';
-import ConnectedUsers from './pages/users';
-import ConnectedSignup from './pages/signup';
-import ConnectedValidate from './pages/validate';
-import ConnectedLogin from './pages/login';
-import ConnectedForgot from './pages/forgot';
-import ConnectedUpdatePassword from './pages/updatepassword';
-import ConnectedEvents from './pages/events';
-import ConnectedEvent from './pages/event';
-import ConnectedCerts from './pages/certs';
-import ConnectedCertDetails from './pages/cert_details';
+import Home from './pages/home';
+import App from './pages/app';
+import Users from './pages/users';
+import UserDetails from './pages/user_details';
+import Signup from './pages/signup';
+import Validate from './pages/validate';
+import Login from './pages/login';
+import Forgot from './pages/forgot';
+import UpdatePassword from './pages/updatepassword';
+import Events from './pages/events';
+import Event from './pages/event';
+import Certs from './pages/certs';
+import CertDetails from './pages/cert_details';
 
 import { verify } from './state/user';
 import './index.css';
@@ -51,21 +52,22 @@ render((
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>
       <Router>
-        <Route exact path="/" component={ConnectedHome} />
+        <Route exact path="/" component={Home} />
 
-        <PrivateRoute path="/app" component={ConnectedApp} />
-        <PrivateRoute path="/users" component={ConnectedUsers} />
-        <PrivateRoute exact path="/events" component={ConnectedEvents} />
-        <PrivateRoute exact path="/events/:event_id" component={ConnectedEvent} />
-        <PrivateRoute exact path="/certs" component={ConnectedCerts} />
-        <PrivateRoute exact path="/certs/:id" component={ConnectedCertDetails} />
+        <PrivateRoute path="/app" component={App} />
+        <PrivateRoute exact path="/users" component={Users} />
+        <PrivateRoute exact path="/users/:id" component={UserDetails} />
+        <PrivateRoute exact path="/events" component={Events} />
+        <PrivateRoute exact path="/events/:event_id" component={Event} />
+        <PrivateRoute exact path="/certs" component={Certs} />
+        <PrivateRoute exact path="/certs/:id" component={CertDetails} />
 
-        <Route path="/login" component={ConnectedLogin} />
-        <Route path="/signup" component={ConnectedSignup} />
-        <Route path="/validate/:token" component={ConnectedValidate} />
-        <Route path="/reset/:token" component={ConnectedUpdatePassword} />
-        <Route path="/login/:token" component={ConnectedLogin} />
-        <Route path="/forgot" component={ConnectedForgot} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/validate/:token" component={Validate} />
+        <Route path="/reset/:token" component={UpdatePassword} />
+        <Route path="/login/:token" component={Login} />
+        <Route path="/forgot" component={Forgot} />
       </Router>
     </MuiThemeProvider>
   </Provider>
