@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { combinedHandler, resetReducer, reset } from 'cooldux';
-import { omit, get } from 'lodash';
+import { omit, get, includes } from 'lodash';
 import Joi from 'joi-browser';
 import validator from './validator';
 import { apiFetch } from '../lib/fetch';
@@ -41,7 +41,7 @@ const {
 } = combinedHandler(['verify', 'validate', 'signup', 'all', 'passwordReset', 'newSignups', 'oauthStart', 'tokenLogin', 'logout', 'emailLogin'], 'user');
 
 const {
-  authHandler,
+  authHandler, authEnd,
   updatePasswordHandler,
   reducerCombined : combined2
 } = combinedHandler(['auth', 'updatePassword'], { throwErrors: true, namespace: 'user' });
@@ -93,12 +93,12 @@ export function getNewSignups() {
   };
 }
 
-export function getAll() {
+export function getAll(query) {
   return function dispatcher(dispatch, getState) {
     const state = getState();
     const token = get(state, 'user.auth.token', null);
 
-    const promise = apiFetch('/users/all', { headers: { Authorization: token } });
+    const promise = apiFetch('/users/all', { headers: { Authorization: token }, query });
     return allHandler(promise, dispatch);
   };
 }
@@ -173,15 +173,24 @@ export function auth(email, password) {
   };
 }
 
+function addAdmin(payload) {
+  if (includes(payload.scope, 'ADMIN')) {
+    payload.isAdmin = true;
+  }
+  return payload;
+}
+
 const reducer = resetReducer(initialStateCombined, function(state, action) {
   state = reducerCombined(state, action);
   state = combined2(state, action);
 
   switch (action.type) {
+    case authEnd.type:
+      return { ...state, auth: addAdmin(action.payload) };
     case verifyEnd.type:
-      return { ...state, auth: action.payload };
+      return { ...state, auth: addAdmin(action.payload) };
     case tokenLoginEnd.type:
-      return { ...state, auth: action.payload };
+      return { ...state, auth: addAdmin(action.payload) };
     case logoutEnd.type:
       return { ...state, auth: null };
     default:

@@ -14,14 +14,24 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
+import { map } from 'lodash';
+import { StyledTableCell, StyledTableRow } from '../components/styled-rows';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Avatar from '@material-ui/core/Avatar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getAll } from '../state/user';
 
 const actionCreators = { getAll };
 
-const baseStyles = {
+const styles = {
   container: {
     backgroundColor: colors.primaryHighlight,
     display: 'flex',
@@ -47,27 +57,53 @@ const baseStyles = {
 
 class App extends Component {
   componentDidMount(){
-    this.props.getAll();
+    this.props.getAll({orderBy: 'name', sortOrder: 'asc'});
   }
   render() {
     const { user } = this.props;
-    let allUserList = '';
-
-    if(user.all) {
-      allUserList = (
-        <div>
-        <h2>All People</h2>
-        <div>
-          {user.all.map((u) => <div key={u.id} style={baseStyles.card}><img src={`https://www.gravatar.com/avatar/${u.gravatar}?s=50`} height={50} width={50} alt={u.name} /> {u.name} <br/> Level: {u.member_level} <br/> <a href={`mailto:${u.email}`}>{u.email}</a> <br/> {u.created_at}</div>)}
-        </div>
-        </div>
-      )
-    }
-
+    // console.log('props', this.props);
     return (
-        <div style={baseStyles.container}>
+        <div style={styles.container}>
           <Header/>
-          {allUserList}
+          <h2>All People</h2>
+          {!user.allPending ? (
+            <TableContainer style={styles.tableContainer}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell></StyledTableCell>
+                    <StyledTableCell>Name</StyledTableCell>
+                    <StyledTableCell>Certs</StyledTableCell>
+                    <StyledTableCell>Instructor</StyledTableCell>
+                    <StyledTableCell>Card?</StyledTableCell>
+                    <StyledTableCell>Created</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {map(user.all, (row) => (
+                    <StyledTableRow key={row.id}>
+                      <TableCell><Avatar src={`https://www.gravatar.com/avatar/${row.gravatar}?s=50`} /></TableCell>
+                      <TableCell component="th" scope="row">
+                        <Link to={`/certs/${row.id}`}>{row.name || 'NO NAME SET'}</Link>
+                      </TableCell>
+                      <TableCell>
+                        <div>{map(row.user_certs, (c, idx) => {
+                          return <Link to={`/certs/${c.f1}`}>{c.f2}{row.user_certs.length > (idx + 1) ? ',' : ''} </Link>
+                        })}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div>{map(row.instructing, (c, idx) => {
+                          return <span>{c.f2}{row.instructing.length > (idx + 1) ? ',' : ''} </span>
+                        })}</div>
+                      </TableCell>
+                      <TableCell>{row.user_cards.length ? 'Y' : 'N'}</TableCell>
+                      <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-US') : ''}</TableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : <CircularProgress/>}
         </div>
     );
   }
