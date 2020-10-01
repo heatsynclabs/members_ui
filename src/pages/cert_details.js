@@ -15,19 +15,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { map } from 'lodash';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { DataGrid } from '@material-ui/data-grid';
 import Header from '../components/header';
 import { read } from '../state/certs';
 import { browseAll } from '../state/userCerts';
-import { StyledTableCell, StyledTableRow } from '../components/styled-rows';
-
-
 
 const styles = {
   eventDescription: {
@@ -36,46 +28,55 @@ const styles = {
   tableContainer: {
     // margin: '10px',
   },
+  gridContainer: {
+    width: '100%',
+    display: 'flex',
+    height: 450
+  },
 };
+
+const columns = [
+  { field: 'id', hide: true },
+  {
+    field: 'user_name',
+    headerName: 'Name',
+    align: 'left',
+    width: 250,
+    renderCell: (params) => {
+      return <Link to={`/users/${params.data.user_id}`}>{params.value}</Link>
+    },
+  },
+  {
+    field: 'created_at',
+    headerName: 'Created',
+    align: 'right',
+    valueFormatter: (params) => { 
+      return new Date(params.value).toLocaleDateString();
+    },
+  },
+];
 
 class Certs extends Component {
   componentDidMount(){
     // this.props.browse();
     const { id } = this.props.match.params;
-    console.log('cdm', id, this.props);
     this.props.read(id);
     this.props.browseAll({cert_id: id, orderBy: 'user_name', sortOrder: 'asc'});
   }
   render() {
     const { browseAll } = this.props.userCerts;
     const { read } = this.props.certs;
-    console.log({browseAll});
 
     return (
         <div style={styles.container}>
           <Header/>
           <h1>{read ? read.name : ''}</h1>
           <h2>{read ? read.description : ''}</h2>
-          <TableContainer style={styles.tableContainer}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Name</StyledTableCell>
-                  <StyledTableCell>Certified</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {map(browseAll, (row) => (
-                  <StyledTableRow key={row.id}>
-                    <TableCell component="th" scope="row">
-                      <Link to={`/certs/${row.id}`}>{row.user_name}</Link>
-                    </TableCell>
-                    <TableCell>{row.created_at}</TableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {browseAll ? (
+            <div style={styles.gridContainer}>
+              <DataGrid columns={columns} rows={browseAll || []} />
+            </div>
+          ) : <CircularProgress/>}
         </div>
     );
   }

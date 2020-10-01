@@ -24,7 +24,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Avatar from '@material-ui/core/Avatar';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getOne } from '../state/user';
@@ -45,10 +48,10 @@ const styles = {
   card: {
     display: 'inline-block',
     height: 200,
-    width: 200,
+    width: '45%',
     overflow: 'hidden',
-    border: '1px solid black',
-    borderRadius: '1em',
+    // border: '1px solid black',
+    borderRadius: '0.5em',
     padding: '0.5em',
     margin: '0.5em'
   }
@@ -68,43 +71,54 @@ class App extends Component {
         <div style={styles.container}>
           <Header/>
           <h2>All People</h2>
+
           {aUser ? (
+            <>
             <TableContainer style={styles.tableContainer}>
               <Table aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <StyledTableCell></StyledTableCell>
                     <StyledTableCell>Name</StyledTableCell>
-                    <StyledTableCell>Certs</StyledTableCell>
-                    <StyledTableCell>Instructor</StyledTableCell>
                     <StyledTableCell>Card?</StyledTableCell>
                     <StyledTableCell>Created</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   
-                    <StyledTableRow key={aUser.id}>
-                      <TableCell><Avatar src={`https://www.gravatar.com/avatar/${aUser.gravatar}?s=50`} /></TableCell>
-                      <TableCell component="th" scope="row">
-                        <Link to={`/certs/${aUser.id}`}>{aUser.name || 'NO NAME SET'}</Link>
-                      </TableCell>
-                      <TableCell>
-                        <div>{map(aUser.user_certs, (c, idx) => {
-                          return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{aUser.user_certs.length > (idx + 1) ? ',' : ''} </Link>
-                        })}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div>{map(aUser.instructing, (c, idx) => {
-                          return <span key={c.f1}>{c.f2}{aUser.instructing.length > (idx + 1) ? ',' : ''} </span>
-                        })}</div>
-                      </TableCell>
-                      <TableCell>{aUser.user_cards.length ? 'Y' : 'N'}</TableCell>
-                      <TableCell>{aUser.created_at ? new Date(aUser.created_at).toLocaleDateString('en-US') : ''}</TableCell>
-                    </StyledTableRow>
+                  <StyledTableRow key={aUser.id}>
+                    <TableCell><Avatar src={`https://www.gravatar.com/avatar/${aUser.gravatar}?s=50`} /></TableCell>
+                    <TableCell component="th" scope="row">
+                    {aUser.name || 'NO NAME SET'}
+                    </TableCell>
+                    <TableCell>{aUser.user_cards.length ? 'Y' : 'N'}</TableCell>
+                    <TableCell>{aUser.created_at ? new Date(aUser.created_at).toLocaleDateString('en-US') : ''}</TableCell>
+                  </StyledTableRow>
                   
                 </TableBody>
               </Table>
             </TableContainer>
+            <Card style={styles.card}>
+              <CardHeader title="Certifications:"/>
+              <CardContent>
+                {aUser.user_certs.length ? (
+                <ul>
+                  {map(aUser.user_certs, (c, idx) => <li><Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}</Link> {new Date(c.f3).toLocaleDateString()}</li>)}
+                </ul>
+                ) : (<span>None yet.</span>)}
+              </CardContent>
+            </Card>
+            <Card style={styles.card}>
+              <CardHeader title="Instructor for:"/>
+              <CardContent>
+                {aUser.instructing.length ? (
+                <div>
+                  {map(aUser.instructing, (c, idx) => <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{aUser.user_certs.length > (idx + 1) ? ',' : ''} </Link>)}
+                </div>
+                ) : (<span>Not instructing any classes.</span>)}
+              </CardContent>
+            </Card>
+            </>
           ) : <CircularProgress/>}
         </div>
     );

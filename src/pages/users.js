@@ -16,15 +16,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { map } from 'lodash';
-import { StyledTableCell, StyledTableRow } from '../components/styled-rows';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { DataGrid } from '@material-ui/data-grid';
 import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getAll } from '../state/user';
@@ -52,8 +46,72 @@ const styles = {
     borderRadius: '1em',
     padding: '0.5em',
     margin: '0.5em'
+  },
+  gridContainer: {
+    width: '100%',
+    display: 'flex',
+    height: 450
   }
 };
+
+const columns = [
+  { field: 'id', hide: true },
+  { 
+    field: 'gravatar',
+    headerName: ' ',
+    width: 60,
+    renderCell: (params) => {
+      return <Avatar src={`https://www.gravatar.com/avatar/${params.value}?s=50`}/>
+    },
+  },
+  {
+    field: 'name',
+    headerName: 'Name',
+    align: 'left',
+    width: 200,
+    renderCell: (params) => {
+      return <Link to={`/users/${params.data.id}`}>{params.value}</Link>
+    },
+  },
+  {
+    field: 'user_certs',
+    headerName: 'Certs',
+    align: 'left',
+    width: 200,
+    renderCell: (params) => {
+      return (<div>{map(params.value, (c, idx) => {
+        return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{params.value.length > (idx + 1) ? ',' : ''} </Link>
+      })}</div>);
+    },
+  },
+  {
+    field: 'instructing',
+    headerName: 'Instructor',
+    align: 'left',
+    width: 150,
+    renderCell: (params) => {
+      return (<div>{map(params.value, (c, idx) => {
+        return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{params.value.length > (idx + 1) ? ',' : ''} </Link>
+      })}</div>);
+    },
+  },
+  {
+    field: 'user_cards',
+    headerName: 'Card?',
+    width: 70, 
+    valueFormatter: (params) => { 
+      return params.value.length ? 'Y' : 'N';
+    },
+  },
+  {
+    field: 'created_at',
+    headerName: 'Created',
+    align: 'right',
+    valueFormatter: (params) => { 
+      return new Date(params.value).toLocaleDateString();
+    },
+  },
+];
 
 class App extends Component {
   componentDidMount(){
@@ -61,59 +119,23 @@ class App extends Component {
   }
   render() {
     const { user } = this.props;
-    // console.log('props', this.props);
     return (
         <div style={styles.container}>
           <Header/>
           <h2>All People</h2>
-          {!user.allPending ? (
-            <TableContainer style={styles.tableContainer}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell></StyledTableCell>
-                    <StyledTableCell>Name</StyledTableCell>
-                    <StyledTableCell>Certs</StyledTableCell>
-                    <StyledTableCell>Instructor</StyledTableCell>
-                    <StyledTableCell>Card?</StyledTableCell>
-                    <StyledTableCell>Created</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {map(user.getAll, (row) => (
-                    <StyledTableRow key={row.id}>
-                      <TableCell><Avatar src={`https://www.gravatar.com/avatar/${row.gravatar}?s=50`} /></TableCell>
-                      <TableCell component="th" scope="row">
-                        <Link to={`/users/${row.id}`}>{row.name || 'NO NAME SET'}</Link>
-                      </TableCell>
-                      <TableCell>
-                        <div>{map(row.user_certs, (c, idx) => {
-                          return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{row.user_certs.length > (idx + 1) ? ',' : ''} </Link>
-                        })}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div>{map(row.instructing, (c, idx) => {
-                          return <span key={c.f1}>{c.f2}{row.instructing.length > (idx + 1) ? ',' : ''} </span>
-                        })}</div>
-                      </TableCell>
-                      <TableCell>{row.user_cards.length ? 'Y' : 'N'}</TableCell>
-                      <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-US') : ''}</TableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+          {!user.getAllPending ? (
+            <div style={styles.gridContainer}>
+              <DataGrid columns={columns} rows={user.getAll || []} />
+            </div>
           ) : <CircularProgress/>}
         </div>
     );
   }
 }
 
-
 function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
-
 
 export default connect(mapStateToProps, actionCreators)(App);
