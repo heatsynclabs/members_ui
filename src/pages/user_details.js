@@ -54,6 +54,9 @@ const styles = {
     borderRadius: '0.5em',
     padding: '0.5em',
     margin: '0.5em'
+  },
+  cards: {
+    display: 'flex',
   }
 };
 
@@ -98,26 +101,28 @@ class App extends Component {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Card style={styles.card}>
-              <CardHeader title="Certifications:"/>
-              <CardContent>
-                {aUser.user_certs.length ? (
-                <ul>
-                  {map(aUser.user_certs, (c, idx) => <li><Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}</Link> {new Date(c.f3).toLocaleDateString()}</li>)}
-                </ul>
-                ) : (<span>None yet.</span>)}
-              </CardContent>
-            </Card>
-            <Card style={styles.card}>
-              <CardHeader title="Instructor for:"/>
-              <CardContent>
-                {aUser.instructing.length ? (
-                <div>
-                  {map(aUser.instructing, (c, idx) => <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{aUser.user_certs.length > (idx + 1) ? ',' : ''} </Link>)}
-                </div>
-                ) : (<span>Not instructing any classes.</span>)}
-              </CardContent>
-            </Card>
+            <div style={styles.cards}>
+              <Card style={styles.card}>
+                <CardHeader title="Certifications:"/>
+                <CardContent>
+                  {aUser.user_certs.length ? (
+                  <ul>
+                    {map(aUser.user_certs, (c, idx) => <li><Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}</Link> {new Date(c.f3).toLocaleDateString()}</li>)}
+                  </ul>
+                  ) : (<span>None yet.</span>)}
+                </CardContent>
+              </Card>
+              <Card style={styles.card}>
+                <CardHeader title="Instructor for:"/>
+                <CardContent>
+                  {aUser.instructing.length ? (
+                  <div>
+                    {map(aUser.instructing, (c, idx) => <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{aUser.user_certs.length > (idx + 1) ? ',' : ''} </Link>)}
+                  </div>
+                  ) : (<span>Not instructing any classes.</span>)}
+                </CardContent>
+              </Card>
+            </div>
             </>
           ) : <CircularProgress/>}
         </div>
