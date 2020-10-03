@@ -37,7 +37,7 @@ const styles = {
 
 class Certs extends Component {
   componentDidMount(){
-    this.props.browse();
+    this.props.browse({orderBy: 'name', sortOrder: 'asc'});
   }
   render() {
     const { browse } = this.props.certs;

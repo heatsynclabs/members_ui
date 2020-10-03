@@ -2,7 +2,7 @@ import { makeDuck, resetReducer } from 'cooldux';
 import { apiFetch } from '../lib/fetch';
 
 const duck = makeDuck({
-  browse: () => apiFetch('/certifications'),
+  browse: (query) => apiFetch('/certifications', { query }),
   read: (id) => apiFetch(`/certifications/${id}`),
   add: (body) => apiFetch('/certifications', { method: 'POST', body }),
   edit: (id, body) => apiFetch(`/certifications/${id}`, { method: 'PUT', body }),

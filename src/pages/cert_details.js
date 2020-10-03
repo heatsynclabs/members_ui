@@ -16,9 +16,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { DataGrid } from '@material-ui/data-grid';
 import Header from '../components/header';
-import { read } from '../state/certs';
+import { read, edit, add } from '../state/certs';
 import { browseAll } from '../state/userCerts';
 
 const styles = {
@@ -32,6 +34,21 @@ const styles = {
     width: '100%',
     display: 'flex',
     height: 450
+  },
+  nameField: {
+    fontSize: '1.5em',
+    magin: '5px',
+  },
+  descriptionFeild: {
+    width: '125ch',
+    magin: '5px',
+  },
+  form: {
+    width: '90%',
+    margin: '5px',
+  },
+  formButton: {
+    margin: '5px',
   },
 };
 
@@ -57,21 +74,73 @@ const columns = [
 ];
 
 class Certs extends Component {
-  componentDidMount(){
-    // this.props.browse();
+  state = {
+    name: '',
+    description: '',
+  };
+
+  nameChange = (e) => {
+    this.setState({name: e.target.value});
+  };
+
+  descriptionChange = (e) => {
+    this.setState({description: e.target.value});
+  };
+
+  submitForm = () => {
     const { id } = this.props.match.params;
-    this.props.read(id);
+    const { name, description } = this.state;
+    this.props.edit(id, { name, description });
+  };
+
+  async componentDidMount(){
+    const { id } = this.props.match.params;
     this.props.browseAll({cert_id: id, orderBy: 'user_name', sortOrder: 'asc'});
+    const { name, description } = await this.props.read(id);
+    this.setState({ name, description });
   }
+
   render() {
     const { browseAll } = this.props.userCerts;
-    const { read } = this.props.certs;
-
+    const { read, editPending } = this.props.certs;
+    const { auth } = this.props.user;
+    console.log('props', this.props.user.auth);
     return (
         <div style={styles.container}>
           <Header/>
-          <h1>{read ? read.name : ''}</h1>
-          <h2>{read ? read.description : ''}</h2>
+          {auth.isAdmin && read ? (
+            <div style={styles.form}>
+              <TextField
+                label="Name"
+                style={styles.nameField}
+                value={this.state.name}
+                onChange={this.nameChange}
+              />
+              <br/>
+              <TextField
+                label="Description"
+                fullWidth
+                style={styles.nameField}
+                value={this.state.description}
+                onChange={this.descriptionChange}
+              />
+              <Button
+                style={styles.formButton}
+                variant="contained"
+                color="primary"
+                onClick={this.submitForm}
+                disabled={editPending || !this.state.name || !this.state.description}
+              >
+                Update
+              </Button>
+            </div>
+          ) : (
+            <>
+              <h1>{read ? read.name : ''}</h1>
+              <h2>{read ? read.description : ''}</h2>
+            </>
+          )}
+          
           {browseAll ? (
             <div style={styles.gridContainer}>
               <DataGrid columns={columns} rows={browseAll || []} />
@@ -88,4 +157,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, { browseAll, read })(Certs);
+export default connect(mapStateToProps, { browseAll, read, edit, add })(Certs);
