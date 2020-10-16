@@ -19,10 +19,14 @@ import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getNewSignups } from '../state/user';
 import { fetchStats } from '../state/stats';
+import { map } from 'lodash';
+import Avatar from '@material-ui/core/Avatar';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
-const actionCreators = { getNewSignups, fetchStats };
-
-const baseStyles = {
+const styles = {
   container: {
     backgroundColor: colors.primaryHighlight,
     display: 'flex',
@@ -33,6 +37,9 @@ const baseStyles = {
   mainBody: {
     display: 'flex',
     height: '100%',
+  },
+  card: {
+    margin: '10px',
   }
 };
 
@@ -43,35 +50,39 @@ class App extends Component {
   }
   render() {
     const { user, stats } = this.props;
-    let newUserList = '';
-    let statsList = '';
+    console.log('props', user, stats);
 
-    if(user.newSignups) {
-      newUserList = (
-        <div>
-        <h2>New People</h2>
-        <ul>
-          {user.newSignups.map((ns) => <li key={ns.id}><img src={`https://www.gravatar.com/avatar/${ns.gravatar}?s=50`} height={50} width={50} alt={ns.name} /> {ns.name} {ns.created_at}</li>)}
-        </ul>
-        </div>
-      )
-    }
+    const newUserList = (
+      <Card style={styles.card}>
+        <CardHeader title={'New heatsync members'}/>
+        <CardContent>
+          {user.getNewSignups ? (
+            <ul>
+              {map(user.getNewSignups, (ns) => <li key={ns.id}><Avatar src={`https://www.gravatar.com/avatar/${ns.gravatar}?s=50`} height={50} width={50} alt={ns.name} /> {ns.name} {new Date(ns.created_at).toLocaleDateString()}</li>)}
+            </ul>
+          ) : <CircularProgress/>}
+        </CardContent>
+      </Card>);
 
-    if(stats.stats) {
-      statsList = (
-        <div>
-        <h2>Cool Stats</h2>
-        <ul>{`Total Users: ${stats.stats.user_count}`}</ul>
-        <ul>{`New Users last 14 days: ${stats.stats.new_user_count}`}</ul>
-        <ul>{`Total User Certifications: ${stats.stats.user_certs}`}</ul>
-        <ul>{`User Certifications last 14 days: ${stats.stats.new_cert_count}`}</ul>
+    const statsList = (
+      <Card style={styles.card}>
+        <CardHeader title={'Cool Stats'}/>
+        <CardContent>
+          {stats.stats ? (
+            <>
+              <div>{`Total Users: ${stats.stats.user_count}`}</div>
+              <div>{`New Users last 14 days: ${stats.stats.new_user_count}`}</div>
+              <div>{`Total User Certifications: ${stats.stats.user_certs}`}</div>
+              <div>{`User Certifications last 14 days: ${stats.stats.new_cert_count}`}</div>
+            </>
+          ) : <CircularProgress/>}
 
-        </div>
-      )
-    }
+        </CardContent>
+      </Card>);
+
 
     return (
-        <div style={baseStyles.container}>
+        <div style={styles.container}>
           <Header/>
           <h1>Hello, {user.auth.name}!</h1>
           <h2>Welcome to the HeatSync Labs Members App.</h2>
@@ -89,4 +100,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, actionCreators)(App);
+export default connect(mapStateToProps, { getNewSignups, fetchStats })(App);

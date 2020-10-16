@@ -14,14 +14,18 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
+import { map } from 'lodash';
+import Avatar from '@material-ui/core/Avatar';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { DataGrid } from '@material-ui/data-grid';
 import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getAll } from '../state/user';
 
 const actionCreators = { getAll };
 
-const baseStyles = {
+const styles = {
   container: {
     backgroundColor: colors.primaryHighlight,
     display: 'flex',
@@ -42,42 +46,96 @@ const baseStyles = {
     borderRadius: '1em',
     padding: '0.5em',
     margin: '0.5em'
+  },
+  gridContainer: {
+    width: '100%',
+    display: 'flex',
+    height: 450
   }
 };
 
+const columns = [
+  { field: 'id', hide: true },
+  { 
+    field: 'gravatar',
+    headerName: ' ',
+    width: 60,
+    renderCell: (params) => {
+      return <Avatar src={`https://www.gravatar.com/avatar/${params.value}?s=50`}/>
+    },
+  },
+  {
+    field: 'name',
+    headerName: 'Name',
+    align: 'left',
+    width: 200,
+    renderCell: (params) => {
+      return <Link to={`/users/${params.data.id}`}>{params.value}</Link>
+    },
+  },
+  {
+    field: 'user_certs',
+    headerName: 'Certs',
+    align: 'left',
+    width: 200,
+    renderCell: (params) => {
+      return (<div>{map(params.value, (c, idx) => {
+        return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{params.value.length > (idx + 1) ? ',' : ''} </Link>
+      })}</div>);
+    },
+  },
+  {
+    field: 'instructing',
+    headerName: 'Instructor',
+    align: 'left',
+    width: 150,
+    renderCell: (params) => {
+      return (<div>{map(params.value, (c, idx) => {
+        return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{params.value.length > (idx + 1) ? ',' : ''} </Link>
+      })}</div>);
+    },
+  },
+  {
+    field: 'user_cards',
+    headerName: 'Card?',
+    width: 70, 
+    valueFormatter: (params) => { 
+      return params.value.length ? 'Y' : 'N';
+    },
+  },
+  {
+    field: 'created_at',
+    headerName: 'Created',
+    align: 'right',
+    valueFormatter: (params) => { 
+      return new Date(params.value).toLocaleDateString();
+    },
+  },
+];
+
 class App extends Component {
   componentDidMount(){
-    this.props.getAll();
+    this.props.getAll({orderBy: 'name', sortOrder: 'asc'});
   }
   render() {
     const { user } = this.props;
-    let allUserList = '';
-
-    if(user.all) {
-      allUserList = (
-        <div>
-        <h2>All People</h2>
-        <div>
-          {user.all.map((u) => <div key={u.id} style={baseStyles.card}><img src={`https://www.gravatar.com/avatar/${u.gravatar}?s=50`} height={50} width={50} alt={u.name} /> {u.name} <br/> Level: {u.member_level} <br/> <a href={`mailto:${u.email}`}>{u.email}</a> <br/> {u.created_at}</div>)}
-        </div>
-        </div>
-      )
-    }
-
     return (
-        <div style={baseStyles.container}>
+        <div style={styles.container}>
           <Header/>
-          {allUserList}
+          <h2>All People</h2>
+          {!user.getAllPending ? (
+            <div style={styles.gridContainer}>
+              <DataGrid columns={columns} rows={user.getAll || []} />
+            </div>
+          ) : <CircularProgress/>}
         </div>
     );
   }
 }
 
-
 function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
-
 
 export default connect(mapStateToProps, actionCreators)(App);

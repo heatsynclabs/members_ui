@@ -35,7 +35,6 @@ const baseStyles = {
 
 class Home extends Component {
   render() {
-    const { user } = this.props;
     return (
       <div style={baseStyles.container}>
         <Header {...this.props}/>

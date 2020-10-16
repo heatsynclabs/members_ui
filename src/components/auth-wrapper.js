@@ -25,13 +25,6 @@ class AuthWrapper extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { user } = nextProps;
-    if ((!user.verifyPending && !user.authPending) && !user.auth) {
-      this.props.history.push('/login');
-    }
-  }
-
   renderChildrenWithProps(children) {
     const childrenWithProps = React.Children.map(children, (child) => {
       return React.cloneElement(child, { ...this.props });

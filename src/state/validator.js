@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Joi from 'joi-browser';
+import Joi from 'joi';
 
 export default function validator(test, keys) {
   const schema = Joi.object().keys(keys);

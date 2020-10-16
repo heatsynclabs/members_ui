@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { startsWith } from 'lodash';
+import { startsWith, omitBy, isUndefined } from 'lodash';
 
 import config from '../config';
 
@@ -20,11 +20,12 @@ export default function handledFetch(path, options){
 
   return fetch(path, options)
     .then((res) => {
+      const contentType = res.headers.get("content-type");
+
       if (res.status >= 400) {
         const err = new Error("Bad response from server");
         err.status = res.status;
-        const contentType = res.headers.get("content-type");
-
+        
         if(startsWith(contentType, 'application/json')){
           return res.json()
           .then(content => {
@@ -39,22 +40,31 @@ export default function handledFetch(path, options){
           throw err;
         });
       }
-      return res;
-    });
 
+      if (startsWith(contentType, 'application/json')) {
+        return res.json();
+      } else if (startsWith(contentType, 'text')) {
+        return res.text();
+      }
+
+      return res.blob();
+    });
 }
 
 export function apiFetch(path, options = {}) {
+  let qs = '';
   if(typeof options.body === 'object'){
     options.body = JSON.stringify(options.body);
+    options.headers = options.headers || {};
+    options.headers['Content-Type'] = 'application/json';
   }
+
+  if (options.query) {
+    const usp = new URLSearchParams(omitBy(options.query, isUndefined));
+    qs = `?${usp.toString()}`;
+  }
+
   Object.assign(options, { credentials: 'include' });
 
-  return handledFetch(`${config.API_URL}${path}`, options)
-    .then(res => {
-      if(res.status === 200){
-        return res.json();
-      }
-      return true;
-    });
+  return handledFetch(`${config.API_URL}${path}${qs}`, options);
 }
