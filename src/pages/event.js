@@ -14,11 +14,11 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Header from '../components/header';
-import { getOne, formatDateRange } from '../state/events';
-
-const actionCreators = { getOne };
+import { read, formatDateRange } from '../state/events';
 
 const baseStyles = {
   eventDescription: {
@@ -27,36 +27,51 @@ const baseStyles = {
 };
 
 class App extends Component {
-  componentDidMount(){
-    this.props.getOne(this.props.match.params.event_id);
+  state = {
+    id: null,
+    name: '',
+    frequency: '',
+    location: '',
+    description: '',
+    start_date: null,
+    end_date: null
+  };
+
+  async componentDidMount(){
+    // this.props.read(this.props.match.params.event_id);
+    const { id, name, frequency, location, description, start_date, end_date } = await this.props.read(this.props.match.params.event_id);
+    this.setState({ id, name, frequency, location, description, start_date, end_date });
   }
+
   render() {
-    const { events } = this.props;
-    // const event = this.props.getOne(1); //this.props.match.params.event_id
+    // const { events } = this.props;
+    // const event = this.props.read(1); //this.props.match.params.event_id
 
-    let eventList = '';
-    const ev = events.one;
+    // let eventList = '';
+    // const ev = this.props.read;
+    const { read } = this.props.events;
 
-    if(ev) {
-      var dateRange = formatDateRange(ev);
-
-      eventList = (
-        <div>
-          <h2>{ev.name}</h2>
-          <h5>{dateRange.full_date_string} ({ev.frequency})</h5>
-          <i>{ev.location}</i>
-          <p style={baseStyles.eventDescription}>
-            {ev.description}
-          </p>
-        </div>
-      )
-    }
 
     return (
-        <div style={baseStyles.container}>
-          <Header/>
-          {eventList}
-        </div>
+      <div style={baseStyles.container}>
+      <Header/>
+      {read ? (
+        <>
+          <h2>{this.state.name}</h2>
+          <h5>
+            {formatDateRange(this.state.start_date, this.state.end_date).full_date_string}
+            &nbsp;({this.state.frequency})
+          </h5>
+          <i>{this.state.location}</i>
+          <p style={baseStyles.eventDescription}>
+            {this.state.description}
+          </p>
+          <Link to={`/events/${this.state.id}/edit`}>Edit</Link>
+        </>
+      ) : (
+        <CircularProgress/>
+      )}
+      </div>
     );
   }
 }
@@ -67,4 +82,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, actionCreators)(App);
+export default connect(mapStateToProps, { read })(App);

@@ -36,6 +36,7 @@ import Forgot from './pages/forgot';
 import UpdatePassword from './pages/updatepassword';
 import Events from './pages/events';
 import Event from './pages/event';
+import EventEdit from './pages/event_edit';
 import Certs from './pages/certs';
 import CertDetails from './pages/cert_details';
 
@@ -59,6 +60,7 @@ render((
         <PrivateRoute exact path="/users/:id" component={UserDetails} />
         <PrivateRoute exact path="/events" component={Events} />
         <PrivateRoute exact path="/events/:event_id" component={Event} />
+        <PrivateRoute exact path="/events/:event_id/edit" component={EventEdit} />
         <PrivateRoute exact path="/certs" component={Certs} />
         <PrivateRoute exact path="/certs/:id" component={CertDetails} />
 

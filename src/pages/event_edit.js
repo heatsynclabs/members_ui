@@ -20,8 +20,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { DataGrid } from '@material-ui/data-grid';
 import Header from '../components/header';
-import { read, edit, add } from '../state/certs';
-import { browseAll } from '../state/userCerts';
+import { read, edit, add } from '../state/events';
+
 
 const styles = {
   eventDescription: {
@@ -73,38 +73,56 @@ const columns = [
   },
 ];
 
-class Certs extends Component {
+class Events extends Component {
   state = {
     name: '',
+    frequency: '',
+    location: '',
     description: '',
+    start_date: '',
+    end_date: ''
   };
 
   nameChange = (e) => {
     this.setState({name: e.target.value});
   };
 
+  frequencyChange = (e) => {
+    this.setState({frequency: e.target.value});
+  };
+
+  locationChange = (e) => {
+    this.setState({location: e.target.value});
+  };
+
   descriptionChange = (e) => {
     this.setState({description: e.target.value});
   };
 
+  startDateChange = (e) => {
+    this.setState({start_date: e.target.value});
+  };
+
+  endDateChange = (e) => {
+    this.setState({end_date: e.target.value});
+  };
+
   submitForm = () => {
-    const { id } = this.props.match.params;
-    const { name, description } = this.state;
-    this.props.edit(id, { name, description });
+    const { event_id } = this.props.match.params;
+    const { name, frequency, description } = this.state;
+    this.props.edit(event_id, { name, frequency, description });
   };
 
   async componentDidMount(){
-    const { id } = this.props.match.params;
-    this.props.browseAll({cert_id: id, orderBy: 'user_name', sortOrder: 'asc'});
-    const { name, description } = await this.props.read(id);
-    this.setState({ name, description });
+    const { event_id } = this.props.match.params;
+    const { id, name, frequency, location, description, start_date, end_date } = await this.props.read(event_id);
+    this.setState({ id, name, frequency, location, description, start_date, end_date });
   }
 
   render() {
-    const { browseAll } = this.props.userCerts;
-    const { read, editPending } = this.props.certs;
+
+    const { read } = this.props.events;
     const { auth } = this.props.user;
-    console.log('props', this.props.user.auth);
     return (
         <div style={styles.container}>
           <Header/>
@@ -118,6 +136,20 @@ class Certs extends Component {
               />
               <br/>
               <TextField
+                label="Frequency"
+                style={styles.frequencyField}
+                value={this.state.frequency}
+                onChange={this.frequencyChange}
+              />
+              <br/>
+              <TextField
+                label="Location"
+                style={styles.locationField}
+                value={this.state.location}
+                onChange={this.locationChange}
+              />
+              <br/>
+              <TextField
                 label="Description"
                 fullWidth
                 multiline
@@ -125,15 +157,28 @@ class Certs extends Component {
                 value={this.state.description}
                 onChange={this.descriptionChange}
               />
+              <TextField
+                label="Start Date"
+                style={styles.startDateField}
+                value={this.state.start_date}
+                onChange={this.startDateChange}
+              />
+              <TextField
+                label="End Date"
+                style={styles.endDateField}
+                value={this.state.end_date}
+                onChange={this.endDateChange}
+              />
+              <br/>
               <Button
                 style={styles.formButton}
                 variant="contained"
                 color="primary"
                 onClick={this.submitForm}
-                disabled={editPending || !this.state.name || !this.state.description}
               >
                 Update
               </Button>
+              <Link to={`/events/${this.state.id}`}>Back</Link>
             </div>
           ) : (
             <>
@@ -141,21 +186,16 @@ class Certs extends Component {
               <h2>{read ? read.description : ''}</h2>
             </>
           )}
-          
-          {browseAll ? (
-            <div style={styles.gridContainer}>
-              <DataGrid columns={columns} rows={browseAll || []} />
-            </div>
-          ) : <CircularProgress/>}
+
         </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { certs, userCerts } = state;
-  return { certs, userCerts };
+  const { events } = state;
+  return { events };
 }
 
 
-export default connect(mapStateToProps, { browseAll, read, edit, add })(Certs);
+export default connect(mapStateToProps, { read, edit, add })(Events);
