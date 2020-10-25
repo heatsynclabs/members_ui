@@ -14,4 +14,6 @@
 
 echo "Starting up. PORT is $PORT"
 export PATH=$PATH:$(pwd)/node_modules/.bin
+yarn
+#yarn run start
 npm run start

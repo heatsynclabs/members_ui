@@ -32,6 +32,8 @@ COPY package.json /home/app/
 COPY . /home/app
 
 #RUN npm run build
-RUN npm install
+#RUN npm install
+RUN yarn
 
 CMD ./docker-run.sh
+

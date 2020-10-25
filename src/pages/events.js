@@ -53,17 +53,17 @@ class App extends Component {
   render() {
     const { events } = this.props;
     let allEventList = '';
+    console.log(events);
 
-    if(events.all) {
+    if(events.getAll) {
       allEventList = (
         <div>
         <h2>All Events</h2>
         <div>
-          {events.all.map((e) => {
-            const dateRange = formatDateRange(e);
+          {events.getAll.map((e) => {
             return <div key={e.id} style={baseStyles.card}>
               <h5><Link to={`/events/${e.id}`}>{e.name}</Link></h5>
-              {dateRange.full_date_string} ({e.frequency}) <br/>
+              {formatDateRange(e.start_date, e.end_date).full_date_string} ({e.frequency}) <br/>
               <i>{e.location}</i>
               <p>{e.description}</p>
               </div>;
