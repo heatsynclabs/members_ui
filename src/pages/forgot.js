@@ -14,12 +14,13 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TextField, Button, Card, CardHeader, CircularProgress } from '@material-ui/core';
+import {
+  TextField, Button, Card, CardHeader, CircularProgress
+} from '@mui/material';
 import { get } from 'lodash';
 
 import { passwordReset } from '../state/user';
 import { colors, formButton } from '../lib/styles';
-
 
 const baseStyles = {
   container: {
@@ -65,6 +66,7 @@ class Forgot extends Component {
   handleResetRequest() {
     this.props.passwordReset(this.state.email);
   }
+
   render() {
     const { user } = this.props;
     if (user.passwordResetPending) {
@@ -81,7 +83,7 @@ class Forgot extends Component {
         errorMsg = get(user.passwordResetError, 'content.message') || get(user.passwordResetError, 'content.error') || user.passwordResetError.message;
       }
       return (
-        <div style={baseStyles.container} >
+        <div style={baseStyles.container}>
           <Card style={baseStyles.loginBox}>
             <CardHeader title="Reset Password" />
             <div style={baseStyles.errorText}>{errorMsg}</div>
@@ -99,14 +101,16 @@ class Forgot extends Component {
                 color="primary"
                 onClick={this.handleResetRequest}
                 style={formButton}
-              >Send Reset Link</Button>
+              >
+                Send Reset Link
+              </Button>
             </div>
           </Card>
         </div>
       );
     }
     return (
-      <div style={baseStyles.container} >
+      <div style={baseStyles.container}>
         <Card style={baseStyles.loginBox}>
           <div>An email has been sent to you with a link to reset your password.</div>
         </Card>
@@ -119,6 +123,5 @@ function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
-
 
 export default connect(mapStateToProps, { passwordReset })(Forgot);

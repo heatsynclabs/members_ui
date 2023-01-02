@@ -14,12 +14,13 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TextField, Button, Card, CardHeader } from '@material-ui/core';
+import {
+  TextField, Button, Card, CardHeader
+} from '@mui/material';
 import { get } from 'lodash';
 
 import { signup } from '../state/user';
 import { colors, formButton } from '../lib/styles';
-
 
 const baseStyles = {
   container: {
@@ -67,16 +68,19 @@ class Signup extends Component {
   }
 
   handleSignup() {
-    const email = this.state.email;
-    const password = this.state.password;
-    const confirmPassword = this.state.confirmPassword;
+    const { email } = this.state;
+    const { password } = this.state;
+    const { confirmPassword } = this.state;
     this.props.signup({ email, password, confirmPassword });
   }
+
   render() {
     const { user } = this.props;
-    let content = (<Card style={baseStyles.loginBox}>
-      <span>Thank you for signing up! An email has been sent to you to verify your account.</span>
-    </Card>);
+    let content = (
+      <Card style={baseStyles.loginBox}>
+        <span>Thank you for signing up! An email has been sent to you to verify your account.</span>
+      </Card>
+    );
 
     if (!user.signup) {
       const propErrors = {};
@@ -91,52 +95,55 @@ class Signup extends Component {
         errorMsg = get(user.signupError, 'content.message') || get(user.signupError, 'content.error') || user.signupError.message;
       }
 
-      content = (<div style={baseStyles.container} >
-        <Card style={baseStyles.loginBox}>
-          <CardHeader title="Sign Up" />
-          <div style={baseStyles.errorText}>{errorMsg}</div>
-          <div style={baseStyles.form}>
-            <TextField
-              className="login-field"
-              label="Email"
-              fullWidth={true}
-              error={!!propErrors.email}
-              onChange={this.handleUpdateEmail}
-              value={this.state.email}
-            />
-            <TextField
-              className="login-field"
-              label="Password"
-              fullWidth={true}
-              onChange={this.handleUpdatePassword}
-              error={!!propErrors.password}
-              value={this.state.password}
-              type="password"
-            />
-            <TextField
-              className="login-field"
-              label="Confirm Password"
-              fullWidth={true}
-              onChange={this.handleUpdateConfirmPassword}
-              error={!!propErrors.confirmPassword}
-              value={this.state.confirmPassword}
-              type="password"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.handleSignup}
-              style={formButton}
-            >Sign Up!</Button>
-          </div>
-        </Card>
-      </div>);
+      content = (
+        <div style={baseStyles.container}>
+          <Card style={baseStyles.loginBox}>
+            <CardHeader title="Sign Up" />
+            <div style={baseStyles.errorText}>{errorMsg}</div>
+            <div style={baseStyles.form}>
+              <TextField
+                className="login-field"
+                label="Email"
+                fullWidth={true}
+                error={!!propErrors.email}
+                onChange={this.handleUpdateEmail}
+                value={this.state.email}
+              />
+              <TextField
+                className="login-field"
+                label="Password"
+                fullWidth={true}
+                onChange={this.handleUpdatePassword}
+                error={!!propErrors.password}
+                value={this.state.password}
+                type="password"
+              />
+              <TextField
+                className="login-field"
+                label="Confirm Password"
+                fullWidth={true}
+                onChange={this.handleUpdateConfirmPassword}
+                error={!!propErrors.confirmPassword}
+                value={this.state.confirmPassword}
+                type="password"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.handleSignup}
+                style={formButton}
+              >
+                Sign Up!
+              </Button>
+            </div>
+          </Card>
+        </div>
+      );
     }
 
     return <div>{content}</div>;
   }
 }
-
 
 function mapStateToProps(state) {
   const { user } = state;

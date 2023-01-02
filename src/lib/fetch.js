@@ -16,34 +16,33 @@ import { startsWith, omitBy, isUndefined } from 'lodash';
 
 import config from '../config';
 
-export default function handledFetch(path, options){
-
+export default function handledFetch(path, options) {
   return fetch(path, options)
     .then((res) => {
-      const contentType = res.headers.get("content-type");
+      const contentType = res.headers.get('content-type');
 
       if (res.status >= 400) {
-        const err = new Error("Bad response from server");
+        const err = new Error('Bad response from server');
         err.status = res.status;
-        
-        if(startsWith(contentType, 'application/json')){
+
+        if (startsWith(contentType, 'application/json')) {
           return res.json()
-          .then(content => {
-            err.content = content;
-            throw err;
-          });
+            .then((content) => {
+              err.content = content;
+              throw err;
+            });
         }
 
         return res.text()
-        .then(content => {
-          err.content = content;
-          throw err;
-        });
+          .then((content) => {
+            err.content = content;
+            throw err;
+          });
       }
 
       if (startsWith(contentType, 'application/json')) {
         return res.json();
-      } else if (startsWith(contentType, 'text')) {
+      } if (startsWith(contentType, 'text')) {
         return res.text();
       }
 
@@ -53,7 +52,7 @@ export default function handledFetch(path, options){
 
 export function apiFetch(path, options = {}) {
   let qs = '';
-  if(typeof options.body === 'object'){
+  if (typeof options.body === 'object') {
     options.body = JSON.stringify(options.body);
     options.headers = options.headers || {};
     options.headers['Content-Type'] = 'application/json';

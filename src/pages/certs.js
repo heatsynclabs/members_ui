@@ -16,13 +16,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { map } from 'lodash';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import { StyledTableCell, StyledTableRow } from '../components/styled-rows';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Header from '../components/header';
 import { browse } from '../state/certs';
 
@@ -36,41 +36,42 @@ const styles = {
 };
 
 class Certs extends Component {
-  componentDidMount(){
-    this.props.browse({orderBy: 'name', sortOrder: 'asc'});
+  componentDidMount() {
+    this.props.browse({ orderBy: 'name', sortOrder: 'asc' });
   }
+
   render() {
     const { browse } = this.props.certs;
 
-    console.log({browse});
+    console.log({ browse });
 
     return (
-        <div style={styles.container}>
-          <Header/>
-          <h1>Certifications</h1>
-          <TableContainer style={styles.tableContainer}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Name</StyledTableCell>
-                  <StyledTableCell>Description</StyledTableCell>
-                  <StyledTableCell>Created</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {map(browse, (row) => (
-                  <StyledTableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                      <Link to={`/certs/${row.id}`}>{row.name}</Link>
-                    </TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.created_at}</TableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+      <div style={styles.container}>
+        <Header />
+        <h1>Certifications</h1>
+        <TableContainer style={styles.tableContainer}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Name</StyledTableCell>
+                <StyledTableCell>Description</StyledTableCell>
+                <StyledTableCell>Created</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {map(browse, (row) => (
+                <StyledTableRow key={row.name}>
+                  <TableCell component="th" scope="row">
+                    <Link to={`/certs/${row.id}`}>{row.name}</Link>
+                  </TableCell>
+                  <TableCell>{row.description}</TableCell>
+                  <TableCell>{row.created_at}</TableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     );
   }
 }
@@ -79,6 +80,5 @@ function mapStateToProps(state) {
   const { certs } = state;
   return { certs };
 }
-
 
 export default connect(mapStateToProps, { browse })(Certs);

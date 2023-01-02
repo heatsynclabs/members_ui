@@ -15,12 +15,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Toolbar } from '@material-ui/core';
+import Toolbar from '@mui/material/Toolbar';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 import { logout } from '../state/user';
-import { ReactComponent as Meatball} from '../meatball.svg';
+import { ReactComponent as Meatball } from '../meatball.svg';
 
 import { colors } from '../lib/styles';
 
@@ -47,63 +47,77 @@ const styles = {
   },
 };
 
-
-
 class Header extends Component {
   constructor(props) {
     super(props);
     this.handleLogout = this.handleLogout.bind(this);
-
   }
+
   handleLogout() {
     this.props.logout();
   }
+
   render() {
     const { user } = this.props;
 
-    let nav = "";
-    let btn = (<Link to="/login"><Button
-            label="Login"
-          >Login</Button></Link>);
+    let nav = '';
+    let btn = (
+      <Link to="/login">
+        <Button
+          label="Login"
+        >
+          Login
+        </Button>
+      </Link>
+    );
 
-    if(user.auth){
+    if (user.auth) {
       nav = (
-          <span>
-            <Link to="/app" style={styles.menuButton}>
-              <Button
-                label="Home">
-                Home
-              </Button>
-            </Link>
-            <Link to="/users" style={styles.menuButton}>
-              <Button
-                label="People">
-                People
-              </Button>
-            </Link>
-            <Link to="/events" style={styles.menuButton}>
-              <Button
-                label="Events">
-                Events
-              </Button>
-            </Link>
-            <Link to="/certs" style={styles.menuButton}>
-              <Button
-                label="Certs">
-                Certs
-              </Button>
-            </Link>
-          </span>);
-      btn = (<Button
-            style={styles.menuButton}
-            onClick={this.handleLogout}
-          >Logout</Button>);
-    }
-    else if(user.verifyPending || user.authPending){
+        <span>
+          <Link to="/app" style={styles.menuButton}>
+            <Button
+              label="Home"
+            >
+              Home
+            </Button>
+          </Link>
+          <Link to="/users" style={styles.menuButton}>
+            <Button
+              label="People"
+            >
+              People
+            </Button>
+          </Link>
+          <Link to="/events" style={styles.menuButton}>
+            <Button
+              label="Events"
+            >
+              Events
+            </Button>
+          </Link>
+          <Link to="/certs" style={styles.menuButton}>
+            <Button
+              label="Certs"
+            >
+              Certs
+            </Button>
+          </Link>
+        </span>
+      );
+      btn = (
+        <Button
+          style={styles.menuButton}
+          onClick={this.handleLogout}
+        >
+          Logout
+        </Button>
+      );
+    } else if (user.verifyPending || user.authPending) {
       btn = (
         <Link to="/login" style={styles.menuButton}>
-        Login
-        </Link>);
+          Login
+        </Link>
+      );
     }
     return (
       <Toolbar style={styles.header}>

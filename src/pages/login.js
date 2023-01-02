@@ -14,7 +14,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Card, CircularProgress, TextField } from '@material-ui/core';
+import withRouter from '../lib/withRouter';
+import { Button, Card, CircularProgress, TextField } from '@mui/material';
 import { get } from 'lodash';
 
 import { auth, oauthStart, tokenLogin, emailLogin } from '../state/user';
@@ -73,12 +74,12 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    const { token } = this.props.match.params;
+    const { token } = this.props.router.params;
     if(token) {
       this.props.tokenLogin(token)
       .then((ok) => {
         console.log('auth ok', ok);
-        this.props.history.push('/app');
+        this.props.router.navigate('/app');
       })
       .catch((err) => {
         console.log('err', err);
@@ -209,4 +210,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { auth, oauthStart, tokenLogin, emailLogin })(Login);
+export default withRouter(connect(mapStateToProps, { auth, oauthStart, tokenLogin, emailLogin })(Login));

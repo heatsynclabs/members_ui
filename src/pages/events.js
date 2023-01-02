@@ -47,47 +47,52 @@ const baseStyles = {
 };
 
 class App extends Component {
-  componentDidMount(){
+  componentDidMount() {
     this.props.getAll();
   }
+
   render() {
     const { events } = this.props;
     let allEventList = '';
 
-    if(events.all) {
+    if (events.all) {
       allEventList = (
         <div>
-        <h2>All Events</h2>
-        <div>
-          {events.all.map((e) => {
-            const dateRange = formatDateRange(e);
-            return <div key={e.id} style={baseStyles.card}>
-              <h5><Link to={`/events/${e.id}`}>{e.name}</Link></h5>
-              {dateRange.full_date_string} ({e.frequency}) <br/>
-              <i>{e.location}</i>
-              <p>{e.description}</p>
-              </div>;
-            }
-          )}
+          <h2>All Events</h2>
+          <div>
+            {events.all.map((e) => {
+              const dateRange = formatDateRange(e);
+              return (
+                <div key={e.id} style={baseStyles.card}>
+                  <h5><Link to={`/events/${e.id}`}>{e.name}</Link></h5>
+                  {dateRange.full_date_string}
+                  {' '}
+                  (
+                  {e.frequency}
+                  )
+                  <br />
+                  <i>{e.location}</i>
+                  <p>{e.description}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        </div>
-      )
+      );
     }
 
     return (
-        <div style={baseStyles.container}>
-          <Header/>
-          {allEventList}
-        </div>
+      <div style={baseStyles.container}>
+        <Header />
+        {allEventList}
+      </div>
     );
   }
 }
-
 
 function mapStateToProps(state) {
   const { events } = state;
   return { events };
 }
-
 
 export default connect(mapStateToProps, actionCreators)(App);

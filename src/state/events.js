@@ -21,7 +21,7 @@ const {
   allHandler,
   oneHandler,
   reducerCombined
-} = combinedHandler(['all','one'], 'events');
+} = combinedHandler(['all', 'one'], 'events');
 
 export function getOne(event_id) {
   return function dispatcher(dispatch, getState) {
@@ -43,16 +43,15 @@ export function getAll() {
   };
 }
 
-
 export function formatDateRange(event) {
-  var out = {
+  const out = {
     start_date: new Date(event.start_date),
-    start_date_string: "",
-    start_time_string: "",
+    start_date_string: '',
+    start_time_string: '',
     end_date: new Date(event.end_date),
-    end_date_string: "",
-    end_time_string: "",
-    full_date_string: ""
+    end_date_string: '',
+    end_time_string: '',
+    full_date_string: ''
   };
 
   out.start_date_string = out.start_date.toLocaleDateString();
@@ -61,16 +60,17 @@ export function formatDateRange(event) {
   out.end_time_string = out.end_date.toLocaleTimeString();
 
   if (event.start_date != null) {
-      out.full_date_string = out.start_date_string+" "+out.start_time_string;
+    out.full_date_string = out.start_date_string + ' ' + out.start_time_string;
   }
 
   if (event.end_date != null) {
     if (out.start_date_string === out.end_date_string && out.start_time_string === out.end_time_string) {
-      out.full_date_string = out.start_date_string+" "+out.start_time_string;
+      out.full_date_string = out.start_date_string + ' ' + out.start_time_string;
     } else if (out.start_date_string === out.end_date_string) {
-      out.full_date_string = out.start_date_string+" "+out.start_time_string+" - "+out.end_time_string;
+      out.full_date_string = out.start_date_string + ' ' + out.start_time_string + ' - ' + out.end_time_string;
     } else {
-      out.full_date_string = out.start_date_string+" "+out.start_time_string+" - "+out.end_date_string+" "+out.end_time_string;
+      // eslint-disable-next-line max-len
+      out.full_date_string = out.start_date_string + ' ' + out.start_time_string + ' - ' + out.end_date_string + ' ' + out.end_time_string;
     }
   }
 

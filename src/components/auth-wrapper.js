@@ -14,14 +14,14 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import withRouter from '../lib/withRouter';
 
 class AuthWrapper extends React.Component {
-
   componentDidUpdate() {
     const { user } = this.props;
     // console.log('cdm', user);
     if ((!user.verifyPending && !user.authPending) && !user.auth) {
-      this.props.history.push('/login');
+      this.props.router.navigate('/login');
     }
   }
 
@@ -37,11 +37,9 @@ class AuthWrapper extends React.Component {
     const { children, user } = this.props;
     return (
       <div>
-        {(user.auth) ?
-          this.renderChildrenWithProps(children)
-        :
-         ''
-        }
+        {(user.auth)
+          ? this.renderChildrenWithProps(children)
+          : ''}
       </div>
     );
   }
@@ -50,8 +48,8 @@ class AuthWrapper extends React.Component {
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    user
+    user,
   };
 }
 
-export default connect(mapStateToProps, {})(AuthWrapper);
+export default withRouter(connect(mapStateToProps, {})(AuthWrapper));

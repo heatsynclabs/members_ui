@@ -15,11 +15,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { validate } from '../state/user';
 import { colors } from '../lib/styles';
-
+import withRouter from '../lib/withRouter';
 
 const baseStyles = {
   container: {
@@ -37,37 +37,51 @@ const baseStyles = {
 };
 
 class Validate extends Component {
-  componentWillMount() {
-    this.props.validate(this.props.match.params.token);
+  UNSAFE_componentWillMount() {
+    this.props.validate(this.props.router.params.token);
   }
+
   render() {
     const { user } = this.props;
 
-    if(user.validate) {
-      return (<div style={baseStyles.container} >
-        <div>
-          Your email has been validated <Link to="/app">click here</Link> to login.
-        </div>
-      </div>);
-    }
-
-    if (user.validateError){
-      return (<div style={baseStyles.container} >
-          <div style={baseStyles.errorText}>
-          There was an error validating. {user.validateError.toString()}
+    if (user.validate) {
+      return (
+        <div style={baseStyles.container}>
+          <div>
+            Your email has been validated
+            {' '}
+            <Link to="/app">click here</Link>
+            {' '}
+            to login.
           </div>
-        </div>);
+        </div>
+      );
     }
 
-    return <div>validating <CircularProgress size={80} thickness={5} /> </div>;
+    if (user.validateError) {
+      return (
+        <div style={baseStyles.container}>
+          <div style={baseStyles.errorText}>
+            There was an error validating.
+            {' '}
+            {user.validateError.toString()}
+          </div>
+        </div>
+      );
+    }
 
+    return (
+      <div>
+        validating
+        <CircularProgress size={80} thickness={5} />
+      </div>
+    );
   }
 }
-
 
 function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
 
-export default connect(mapStateToProps, { validate })(Validate);
+export default withRouter(connect(mapStateToProps, { validate })(Validate));

@@ -15,12 +15,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { TextField, Button, Card, CardHeader } from '@material-ui/core';
+import {
+  TextField, Button, Card, CardHeader
+} from '@mui/material';
 import { get } from 'lodash';
 
 import { updatePassword } from '../state/user';
 import { colors, formButton } from '../lib/styles';
-
+import withRouter from '../lib/withRouter';
 
 const baseStyles = {
   container: {
@@ -66,9 +68,9 @@ class UpdatePassword extends Component {
   }
 
   handleUpdate() {
-    this.props.updatePassword(this.props.match.params.token, this.state.password, this.state.confirmPassword)
+    this.props.updatePassword(this.props.router.params.token, this.state.password, this.state.confirmPassword)
       .then((res) => {
-        this.props.history.push('/app');
+        this.props.router.navigate('/app');
         return res;
       })
       .catch((err) => {
@@ -78,7 +80,7 @@ class UpdatePassword extends Component {
 
   render() {
     const { user } = this.props;
-    
+
     if (!user.updatePassword) {
       const propErrors = {};
       let errorMsg = '';
@@ -92,56 +94,62 @@ class UpdatePassword extends Component {
         errorMsg = get(user.updatePasswordError, 'content.message') || get(user.updatePasswordError, 'content.error') || user.updatePasswordError.message;
       }
 
-      return (<div style={baseStyles.container} >
-        <Card style={baseStyles.loginBox}>
-          <CardHeader title="Update your password." />
-          <div style={baseStyles.errorText}>{errorMsg}</div>
-          <div style={baseStyles.form}>
-            <TextField
-              className="login-field"
-              label="Password"
-              fullWidth={true}
-              onChange={this.handleUpdatePassword}
-              error={!!propErrors.password}
-              value={this.state.password}
-              type="password"
-            />
-            <TextField
-              className="login-field"
-              label="Confirm Password"
-              fullWidth={true}
-              error={!!propErrors.confirmPassword}
-              onChange={this.handleUpdateConfirmPassword}
-              value={this.state.confirmPassword}
-              type="password"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.handleUpdate}
-              style={formButton}
-              disabled={!this.state.password || !this.state.confirmPassword}
-            >Update Password</Button>
-          </div>
-        </Card>
-      </div>);
+      return (
+        <div style={baseStyles.container}>
+          <Card style={baseStyles.loginBox}>
+            <CardHeader title="Update your password." />
+            <div style={baseStyles.errorText}>{errorMsg}</div>
+            <div style={baseStyles.form}>
+              <TextField
+                className="login-field"
+                label="Password"
+                fullWidth={true}
+                onChange={this.handleUpdatePassword}
+                error={!!propErrors.password}
+                value={this.state.password}
+                type="password"
+              />
+              <TextField
+                className="login-field"
+                label="Confirm Password"
+                fullWidth={true}
+                error={!!propErrors.confirmPassword}
+                onChange={this.handleUpdateConfirmPassword}
+                value={this.state.confirmPassword}
+                type="password"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.handleUpdate}
+                style={formButton}
+                disabled={!this.state.password || !this.state.confirmPassword}
+              >
+                Update Password
+              </Button>
+            </div>
+          </Card>
+        </div>
+      );
     }
 
     return (
-      <div style={baseStyles.container} >
+      <div style={baseStyles.container}>
         <Card style={baseStyles.loginBox}>
           <span>Your password has been reset.</span>
           <Link to="/app">
-          <Button
-            variant="contained"
-            color="primary"
-          >Login</Button>
+            <Button
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
           </Link>
         </Card>
-      </div>);
+      </div>
+    );
   }
 }
-
 
 function mapStateToProps(state) {
   const { user } = state;
@@ -149,5 +157,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-
-export default connect(mapStateToProps, { updatePassword })(UpdatePassword);
+export default withRouter(connect(mapStateToProps, { updatePassword })(UpdatePassword));

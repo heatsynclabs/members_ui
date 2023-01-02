@@ -8,8 +8,11 @@ const duck = makeDuck({
   edit: (id, body) => apiFetch(`/certifications/${id}`, { method: 'PUT', body }),
 });
 
-export const { browse, add, edit, read, initialStateCombined } = duck;
+export const {
+  browse, add, edit, read, initialStateCombined,
+} = duck;
 
+// eslint-disable-next-line default-param-last
 const reducer = resetReducer(initialStateCombined, (state = initialStateCombined, action) => {
   return duck.reducerCombined(state, action);
 });

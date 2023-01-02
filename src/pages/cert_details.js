@@ -15,13 +15,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { DataGrid } from '@material-ui/data-grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { DataGrid } from '@mui/x-data-grid';
 import Header from '../components/header';
 import { read, edit, add } from '../state/certs';
 import { browseAll } from '../state/userCerts';
+import withRouter from '../lib/withRouter';
 
 const styles = {
   eventDescription: {
@@ -88,13 +89,13 @@ class Certs extends Component {
   };
 
   submitForm = () => {
-    const { id } = this.props.match.params;
+    const { id } = this.props.router.params;
     const { name, description } = this.state;
     this.props.edit(id, { name, description });
   };
 
   async componentDidMount(){
-    const { id } = this.props.match.params;
+    const { id } = this.props.router.params;
     this.props.browseAll({cert_id: id, orderBy: 'user_name', sortOrder: 'asc'});
     const res = await this.props.read(id);
     if (res !== null) {
@@ -160,4 +161,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, { browseAll, read, edit, add })(Certs);
+export default withRouter(connect(mapStateToProps, { browseAll, read, edit, add })(Certs));

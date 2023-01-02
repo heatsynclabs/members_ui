@@ -16,7 +16,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/header';
 
-
 import { colors } from '../lib/styles';
 
 const baseStyles = {
@@ -37,7 +36,7 @@ class Home extends Component {
   render() {
     return (
       <div style={baseStyles.container}>
-        <Header {...this.props}/>
+        <Header {...this.props} />
         <h1>Welcome to the HeatSync Labs Members App.</h1>
       </div>
     );
@@ -48,6 +47,5 @@ function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
-
 
 export default connect(mapStateToProps)(Home);

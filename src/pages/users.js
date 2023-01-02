@@ -16,9 +16,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { map } from 'lodash';
-import Avatar from '@material-ui/core/Avatar';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { DataGrid } from '@material-ui/data-grid';
+import Avatar from '@mui/material/Avatar';
+import CircularProgress from '@mui/material/CircularProgress';
+import { DataGrid } from '@mui/x-data-grid';
 import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getAll } from '../state/user';
@@ -56,12 +56,12 @@ const styles = {
 
 const columns = [
   { field: 'id', hide: true },
-  { 
+  {
     field: 'gravatar',
     headerName: ' ',
     width: 60,
     renderCell: (params) => {
-      return <Avatar src={`https://www.gravatar.com/avatar/${params.value}?s=50`}/>
+      return <Avatar src={`https://www.gravatar.com/avatar/${params.value}?s=50`} />;
     },
   },
   {
@@ -70,7 +70,7 @@ const columns = [
     align: 'left',
     width: 200,
     renderCell: (params) => {
-      return <Link to={`/users/${params.id}`}>{params.value}</Link>
+      return <Link to={`/users/${params.id}`}>{params.value}</Link>;
     },
   },
   {
@@ -79,9 +79,20 @@ const columns = [
     align: 'left',
     width: 200,
     renderCell: (params) => {
-      return (<div>{map(params.value, (c, idx) => {
-        return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{params.value.length > (idx + 1) ? ',' : ''} </Link>
-      })}</div>);
+      return (
+        <div>
+          {map(params.value, (c, idx) => {
+            return (
+              <Link key={c.f1} to={`/certs/${c.f1}`}>
+                {c.f2}
+                {params.value.length > (idx + 1) ? ',' : ''}
+                {' '}
+
+              </Link>
+            );
+          })}
+        </div>
+      );
     },
   },
   {
@@ -90,16 +101,27 @@ const columns = [
     align: 'left',
     width: 150,
     renderCell: (params) => {
-      return (<div>{map(params.value, (c, idx) => {
-        return <Link key={c.f1} to={`/certs/${c.f1}`}>{c.f2}{params.value.length > (idx + 1) ? ',' : ''} </Link>
-      })}</div>);
+      return (
+        <div>
+          {map(params.value, (c, idx) => {
+            return (
+              <Link key={c.f1} to={`/certs/${c.f1}`}>
+                {c.f2}
+                {params.value.length > (idx + 1) ? ',' : ''}
+                {' '}
+
+              </Link>
+            );
+          })}
+        </div>
+      );
     },
   },
   {
     field: 'user_cards',
     headerName: 'Card?',
-    width: 70, 
-    valueFormatter: (params) => { 
+    width: 70,
+    valueFormatter: (params) => {
       return params.value.length ? 'Y' : 'N';
     },
   },
@@ -107,28 +129,29 @@ const columns = [
     field: 'created_at',
     headerName: 'Created',
     align: 'right',
-    valueFormatter: (params) => { 
+    valueFormatter: (params) => {
       return new Date(params.value).toLocaleDateString();
     },
   },
 ];
 
 class App extends Component {
-  componentDidMount(){
-    this.props.getAll({orderBy: 'name', sortOrder: 'asc'});
+  componentDidMount() {
+    this.props.getAll({ orderBy: 'name', sortOrder: 'asc' });
   }
+
   render() {
     const { user } = this.props;
     return (
-        <div style={styles.container}>
-          <Header/>
-          <h2>All People</h2>
-          {!user.getAllPending ? (
-            <div style={styles.gridContainer}>
-              <DataGrid columns={columns} rows={user.getAll || []} />
-            </div>
-          ) : <CircularProgress/>}
-        </div>
+      <div style={styles.container}>
+        <Header />
+        <h2>All People</h2>
+        {!user.getAllPending ? (
+          <div style={styles.gridContainer}>
+            <DataGrid columns={columns} rows={user.getAll || []} />
+          </div>
+        ) : <CircularProgress />}
+      </div>
     );
   }
 }

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { createMuiTheme } from '@material-ui/core/styles';
-  
-const theme = createMuiTheme({
+import { createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
   typography: {
     fontFamily: [
       'Roboto, sans-serif',
@@ -27,7 +27,7 @@ const theme = createMuiTheme({
       main: 'rgb(58,100,49)', // pine green
     },
     secondary: {
-      main: 'rgb(215,98,35)' // brownish orange
+      main: 'rgb(215,98,35)', // brownish orange
     },
   },
   overrides: {
@@ -69,6 +69,5 @@ const theme = createMuiTheme({
     },
   },
 });
-
 
 export default theme;

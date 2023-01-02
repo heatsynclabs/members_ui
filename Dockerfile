@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:12-alpine AS dev
+FROM node:19.3-alpine AS dev
 EXPOSE 3005 9229
-
-RUN apk add build-base
 
 WORKDIR /home/app
 
