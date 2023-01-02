@@ -30,41 +30,49 @@ const theme = createTheme({
       main: 'rgb(215,98,35)', // brownish orange
     },
   },
-  overrides: {
+  components: {
     MuiButton: {
-      root: {
-        variant: 'contained',
-        backgroundColor: 'rgb(215, 98, 35)',
-        color: '#fff',
-        textTransform: 'none',
-        fontWeight: '100',
-        fontSize: '.85rem',
+      styleOverrides: {
+        root: {
+          variant: 'contained',
+          backgroundColor: 'rgb(215, 98, 35)',
+          color: '#fff',
+          textTransform: 'none',
+          fontWeight: '100',
+          fontSize: '.85rem',
+        },
       },
     },
     MuiFormControl: {
-      root: {
-        backgroundColor: '#fff',
-        color: 'rgb(215,98,35)',
-        borderRadius: 4,
-        border: '1px solid #ced4da',
-        marginTop: '7px',
-        paddingLeft: '5px',
+      styleOverrides: {
+        root: {
+          backgroundColor: '#fff',
+          color: 'rgb(215,98,35)',
+          borderRadius: 4,
+          border: '1px solid #ced4da',
+          marginTop: '7px',
+          paddingLeft: '5px',
+        },
       },
     },
     MuiTableCell: {
-      head: {
-        fontWeight: 700,
-      },
-      body: {
-        fontWeight: 700,
+      styleOverrides: {
+        head: {
+          fontWeight: 700,
+        },
+        body: {
+          fontWeight: 700,
+        },
       },
     },
     MuiSvgIcon: {
-      colorAction: {
-        color: 'rgb(255,170,69)',
-      },
-      colorError: {
-        color: 'rgb(255,99,99)',
+      styleOverrides: {
+        colorAction: {
+          color: 'rgb(255,170,69)',
+        },
+        colorError: {
+          color: 'rgb(255,99,99)',
+        },
       },
     },
   },
