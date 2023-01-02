@@ -15,11 +15,21 @@
 version: "3"
 services:
   members_ui:
+    stdin_open: true # required for the react-scripts to work
     container_name: members_ui
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
       - "3005:3005"
     environment:
       PORT: 3005
       NODE_ENV: "development"
       REACT_APP_MEMBERS_API_URL: "http://localhost:3004" # use what's visible from the host machine; NO TRAILING SLASH
+    volumes:
+      - .:/home/app
+      - nm:/home/app/node_modules
+
+volumes:
+  nm:
+    driver: local
