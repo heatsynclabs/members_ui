@@ -22,13 +22,25 @@ This is the UI component of the [members_app](https://github.com/heatsynclabs/me
 
 ## Normal Docker Dev Usage
 
+### Prerequisites
+
+- Docker Compose v2 or higher (run `docker compose version` or `docker-compose version`)
+
+### ARM vs x86 Considerations
+
+Due to the way npm handles binary packages across different CPU architectures, **if you run add a new dependency** (npm install ...), you will have to remove the volume and recreate the image, so something like:
+
+```
+docker compose rm -fsv members_ui
+docker volume rm members_ui_nm
+docker compose up -d members_ui
+```
+
+### Instructions
+
 **Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
 
-First, create a local copy of your docker-compose:
-`cp docker-compose.dist.yml docker-compose.yml`
-
-And edit it as desired:
-`nano docker-compose.yml`
+If you need to override some of the default environment variables or ports in from the docker-compose.yml file, you can create a docker-compose.override.yml and add your own environment variables or ports there. This file is automatically used by docker-compose and is ignored by git, so you can safely add it to your local repo.
 
   > **Warning, this docker image is intended for dev mode** attached to an npm-install-able project folder. ***Running this in critical/prod environments is strongly discouraged without lots of testing!!!***
 
@@ -37,7 +49,7 @@ Take note of port numbers, API url, and volume paths.
 Review the `Dockerfile` so you know what's about to be booted. For example, the working directory, package.json, and CMD (including npm install and fixture-installation commands) lines which by default will affect your environment.
 
 Create the docker container for the api and database:
-`docker-compose up`
+`docker compose up`
 
 To access the container's shell prompt:
 `docker exec -it members_ui /bin/sh`
