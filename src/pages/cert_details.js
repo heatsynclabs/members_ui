@@ -97,10 +97,10 @@ class Certs extends Component {
     const { id } = this.props.match.params;
     this.props.browseAll({cert_id: id, orderBy: 'user_name', sortOrder: 'asc'});
     const res = await this.props.read(id);
-	if (res !== null) {
-		const { name, description } = res;
-    	this.setState({ name, description });
-	}
+    if (res !== null) {
+        const { name, description } = res;
+        this.setState({ name, description });
+    }
   }
 
   render() {
