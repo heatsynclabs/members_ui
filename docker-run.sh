@@ -14,4 +14,8 @@
 
 echo "Starting up. PORT is $PORT"
 export PATH=$PATH:$(pwd)/node_modules/.bin
+if [[ $NPMINSTALL == 1 ]]
+then
+  npm install
+fi
 npm run start
