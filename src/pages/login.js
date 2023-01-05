@@ -97,7 +97,8 @@ class Login extends Component {
     this.setState({email, emailValid});
   }
 
-  sendEmail = async () => {
+  sendEmail = async (event) => {
+    event.preventDefault();
     await this.props.emailLogin(this.state.email);
     this.setState({sent: true});
   }
@@ -173,25 +174,27 @@ class Login extends Component {
             ><img alt="email" style={styles.loginBrand} src="/images/oauth/mail.svg"/>
             <span style={styles.loginBrandText}>Sign in with Email</span></Button>) : ''}
             {this.state.useEmail ? (
-              <div>
-                <TextField
-                  value={this.state.email}
-                  label="email"
-                  onChange={this.textChange}
-                  autoFocus
-                  style={{margin: '10px', width: '220px', color: 'black'}}
-                />
-                <br/>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={!this.state.emailValid}
-                  onClick={this.sendEmail}
-                  style={{margin: '10px', width: '180px', color: '#FFF', backgroundColor: this.state.emailValid ? '#db4437' : '#DDD'}}
-                >
-                  <img alt="email" style={styles.loginBrand} src="/images/oauth/mail.svg"/>Send Link
-                </Button>
-              </div>
+              <form onSubmit={this.sendEmail}>
+                <div>
+                  <TextField
+                    value={this.state.email}
+                    label="email"
+                    onChange={this.textChange}
+                    autoFocus
+                    style={{margin: '10px', width: '220px', color: 'black'}}
+                  />
+                  <br/>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={!this.state.emailValid}
+                    style={{margin: '10px', width: '180px', color: '#FFF', backgroundColor: this.state.emailValid ? '#db4437' : '#DDD'}}
+                    type="submit"
+                  >
+                    <img alt="email" style={styles.loginBrand} src="/images/oauth/mail.svg"/>Send Link
+                  </Button>
+                </div>
+              </form>
             ) : ''}
           
           </div>
