@@ -20,9 +20,9 @@ This is the UI component of the [members_app](https://github.com/heatsynclabs/me
 * Password reset page
 * Logged in home page
 
-## Testing
+## Logging In (Dev/Test)
 
-Presuming nothing's changed on the API side, you can login with `admin@example.com` as a username, and access any emails sent at http://localhost:10001 in dev mode. Other users are jimbo, gobie, and hardy all at example.com, with member_levels of 1, 5, and 10 each.
+Presuming nothing's changed on the API side, once the docker stack is started you can login with `admin@example.com` as a username, and access any emails sent at http://localhost:10001 in dev mode. Other users are jimbo, gobie, and hardy all at example.com, with member_levels of 1, 5, and 10 each.
 
 ## Normal Docker Dev Usage
 
