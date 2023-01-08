@@ -1,14 +1,14 @@
 # Member Management UI
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
-[![Build Status](https://travis-ci.com/heatsynclabs/members_ui.svg?branch=master)](https://travis-ci.com/heatsynclabs/members_ui)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.com/heatsynclabs/members_ui.svg?branch=master)](https://travis-ci.com/heatsynclabs/members_ui)
 
 This is the UI component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info and general readme information.
 
+See the CONTRIBUTING file for information on helping out, or our [Wiki](https://wiki.heatsynclabs.org/wiki/HSL_API) for project governance.
+
 ## Features
 
-* JS frontent that connects directly to the members_api backend
+* JS frontend that connects directly to the members_api backend
 * all of create-react-app features
 * react-router
 * redux
