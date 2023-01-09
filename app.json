@@ -1,0 +1,15 @@
+{
+  "name": "Members UI",
+  "description": "UI for the Members App",
+  "repository": "https://github.com/heatsynclabs/members_ui",
+  "env": {
+    "NODE_ENV": {
+      "description": "Run the app in production/development/test",
+      "value": "development"
+    },
+    "REACT_APP_MEMBERS_API_URL": {
+      "description": "The URL of the appropriate backend API service",
+      "value": "https://hsl-members-api.herokuapp.com/"
+    }
+  }
+}
