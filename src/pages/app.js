@@ -26,6 +26,8 @@ import { getNewSignups } from '../state/user';
 import { colors } from '../lib/styles';
 import Header from '../components/header';
 
+debugger;
+
 const styles = {
   container: {
     backgroundColor: colors.primaryHighlight,
