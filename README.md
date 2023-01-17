@@ -72,3 +72,4 @@ You'll then have to manually run commands like `npm install` or `npm run start` 
 
 Since this is a React app, console.log will output directly to your browser's Javascript console for debugging purposes.
 
+MORE
