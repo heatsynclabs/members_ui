@@ -8,8 +8,8 @@
       "value": "development"
     },
     "REACT_APP_MEMBERS_API_URL": {
-      "description": "The URL of the appropriate backend API service",
-      "value": "https://hsl-members-api.herokuapp.com/"
+      "description": "Base URL of the appropriate backend API service, no trailing slash",
+      "value": "https://hsl-members-api.herokuapp.com"
     }
   }
 }
