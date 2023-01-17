@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route, createBrowserRouter } from 'react-router-dom';
+import { HashRouter, BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -35,6 +35,8 @@ import AuthWrapper from './components/auth-wrapper';
 // @ts-ignore
 const composeEnhancers = window.__REX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunkMiddleware, promiseMiddleware)));
+
+const Router = HashRouter;
 
 store.dispatch(verify());
 
