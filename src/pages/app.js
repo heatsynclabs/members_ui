@@ -26,6 +26,8 @@ import { getNewSignups } from '../state/user';
 import { colors } from '../lib/styles';
 import Header from '../components/header';
 
+debugger;
+
 const styles = {
   container: {
     backgroundColor: colors.primaryHighlight,
@@ -40,7 +42,7 @@ const styles = {
   },
   card: {
     margin: '10px',
-  }
+  },
 };
 
 class App extends Component {
@@ -55,6 +57,7 @@ class App extends Component {
 
     const newUserList = (
       <Card style={styles.card}>
+        Hey Dudes
         <CardHeader title="New heatsync members" />
         <CardContent>
           {user.getNewSignups ? (
