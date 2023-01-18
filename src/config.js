@@ -18,10 +18,15 @@
 // TODO: Remove this atrocity that exists
 // solely because create-react-app doesnt let us set env vars
 function getApiUrl() {
+  const localStorageUrl = window.localStorage.getItem('REACT_APP_MEMBERS_API_URL');
+  if (localStorageUrl) {
+    return localStorageUrl;
+  }
+
   // NOTE: the API URL should never have a trailing slash.
   if (process.env.REACT_APP_MEMBERS_API_URL) {
     return process.env.REACT_APP_MEMBERS_API_URL;
-  } else if (window.location.hostname.includes('cooldomain')) {
+  } if (window.location.hostname.includes('cooldomain')) {
     const [subdomain, hostname, tld] = window.location.href.split('.');
     let api = 'api';
 
@@ -36,16 +41,16 @@ function getApiUrl() {
 
 const env = {
   test: {
-    API_URL: 'http://localhost:3004'
+    API_URL: 'http://localhost:3004',
   },
   development: {
-    API_URL: getApiUrl()
+    API_URL: getApiUrl(),
   },
   staging: {
-    API_URL: getApiUrl()
+    API_URL: getApiUrl(),
   },
   production: {
-    API_URL: getApiUrl()
+    API_URL: getApiUrl(),
   },
 };
 
