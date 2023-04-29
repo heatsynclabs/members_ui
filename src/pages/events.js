@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getAll, formatDateRange } from '../state/events';
+import EditIcon from '@mui/icons-material/Edit';
 
 const baseStyles = {
   container: {
@@ -48,6 +49,7 @@ export default function Events() {
   const dispatch = useDispatch();
 
   const events = useSelector(({ events: { getAll: events } }) => events);
+  const auth = useSelector((state) => state.user.auth);
 
   useEffect(() => {
     dispatch(getAll());
@@ -64,7 +66,13 @@ export default function Events() {
               const dateRange = formatDateRange(e);
               return (
                 <div key={e.id} style={baseStyles.card}>
-                  <h5><Link to={`/events/${e.id}`}>{e.name}</Link></h5>
+                  <h5>
+                    <Link to={`/events/${e.id}`}>{e.name}</Link>
+                    &nbsp;
+                    {auth.isAdmin ? (
+                      <Link to={`/events/${e.id}/edit`}><EditIcon /></Link>
+                    ) : ''}
+                  </h5>
                   {dateRange.full_date_string}
                   {' '}
                   (

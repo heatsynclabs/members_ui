@@ -6,6 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { CircularProgress, Paper } from '@mui/material';
 import { edit, getOne } from '../state/events';
 import FormInputText from '../components/form/FormInputText';
+import FormInputDate from '../components/form/FormInputDate';
 import Header from '../components/header';
 // import { connect } from 'react-redux';
 // import { Link } from 'react-router-dom';
@@ -72,6 +73,11 @@ export default function EventEdit() {
   const methods = useForm({
     defaultValues: {
       name: '',
+      description: '',
+      start_date: '',
+      end_date: '',
+      frequency: '',
+      location: '',
     },
   });
 
@@ -104,6 +110,11 @@ export default function EventEdit() {
         <FormProvider {...methods}>
           <form id="eventForm" onSubmit={methods.handleSubmit(onSubmit)}>
             <FormInputText name="name" label="Name" />
+            <FormInputText name="description" label="Description" />
+            <FormInputDate name="start_date" label="Start Date" />
+            <FormInputDate name="end_date" label="End Date" />
+            <FormInputText name="frequency" label="Frequency" />
+            <FormInputText name="location" label="Location" />
           </form>
         </FormProvider>
 
