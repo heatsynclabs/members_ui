@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// @ts-ignore
 import {
   combinedHandler, resetReducer, reset, makeDuck,
 } from 'cooldux';

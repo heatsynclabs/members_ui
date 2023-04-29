@@ -12,36 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { combinedHandler } from 'cooldux';
+import { makeDuck, resetReducer } from 'cooldux';
 
-import { get } from 'lodash';
 import { apiFetch } from '../lib/fetch';
 
-const {
-  allHandler,
-  oneHandler,
-  reducerCombined
-} = combinedHandler(['all', 'one'], 'events');
+const duck = makeDuck({
+  getAll: () => apiFetch('/events'), // browse
+  getOne: (id) => {
+    return apiFetch(`/events/${id}`);
+  },
+  add: (body) => apiFetch('/events', { method: 'POST', body }),
+  edit: (id, body) => apiFetch(`/events/${id}`, { method: 'PUT', body }),
+});
 
-export function getOne(event_id) {
-  return function dispatcher(dispatch, getState) {
-    const state = getState();
-    const token = get(state, 'user.auth.token', null);
+export const {
+  getAll, add, edit, getOne, initialStateCombined,
+} = duck;
 
-    const promise = apiFetch(`/events/${event_id}`, { headers: { Authorization: token } });
-    return oneHandler(promise, dispatch);
-  };
-}
+// eslint-disable-next-line default-param-last
+const reducer = resetReducer(initialStateCombined, (state = initialStateCombined, action) => {
+  return duck.reducerCombined(state, action);
+});
 
-export function getAll() {
-  return function dispatcher(dispatch, getState) {
-    const state = getState();
-    const token = get(state, 'user.auth.token', null);
-
-    const promise = apiFetch('/events', { headers: { Authorization: token } });
-    return allHandler(promise, dispatch);
-  };
-}
+export default reducer;
 
 export function formatDateRange(event) {
   const out = {
@@ -51,7 +44,7 @@ export function formatDateRange(event) {
     end_date: new Date(event.end_date),
     end_date_string: '',
     end_time_string: '',
-    full_date_string: ''
+    full_date_string: '',
   };
 
   out.start_date_string = out.start_date.toLocaleDateString();
@@ -76,5 +69,3 @@ export function formatDateRange(event) {
 
   return out;
 }
-
-export default reducerCombined;
