@@ -47,7 +47,7 @@ const baseStyles = {
 export default function Events() {
   const dispatch = useDispatch();
 
-  const events = useSelector(({ events }) => events);
+  const events = useSelector(({ events: { getAll: events } }) => events);
 
   useEffect(() => {
     dispatch(getAll());
@@ -56,11 +56,11 @@ export default function Events() {
   return (
     <div style={baseStyles.container}>
       <Header />
-      {events.all ? (
+      {events ? (
         <div>
           <h2>All Events</h2>
           <div>
-            {events.all.map((e) => {
+            {events.map((e) => {
               const dateRange = formatDateRange(e);
               return (
                 <div key={e.id} style={baseStyles.card}>

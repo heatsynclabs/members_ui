@@ -61,7 +61,7 @@ import Header from '../components/header';
 
 export default function EventEdit() {
   const params = useParams();
-  const event = useSelector(({ events: { one: event } }) => event);
+  const event = useSelector(({ events: { getOne: event } }) => event);
 
   const dispatch = useDispatch();
 
@@ -82,7 +82,14 @@ export default function EventEdit() {
   }, [event, reset]);
 
   const onSubmit = (updatedEvent) => {
-    dispatch(edit(params.event_id, updatedEvent));
+    dispatch(edit(params.event_id, {
+      name: updatedEvent.name,
+      description: updatedEvent.description,
+      start_date: updatedEvent.start_date,
+      end_date: updatedEvent.end_date,
+      location: updatedEvent.location,
+      frequency: updatedEvent.frequency,
+    }));
   };
 
   if (!event) {
