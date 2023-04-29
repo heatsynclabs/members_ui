@@ -1,11 +1,12 @@
-import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-
-function useEvents() {
-  return useSelector(({ events }) => events);
-}
-
+import { FormProvider, useForm } from 'react-hook-form';
+import { CircularProgress, Paper } from '@mui/material';
+import { getOne } from '../state/events';
+import FormInputText from '../components/form/FormInputText';
+import Header from '../components/header';
 // import { connect } from 'react-redux';
 // import { Link } from 'react-router-dom';
 // import CircularProgress from '@material-ui/core/CircularProgress';
@@ -44,40 +45,69 @@ function useEvents() {
 //   },
 // };
 
-function useFetch(fn) {
-  const [data, setData] = useState();
+// type FetchState = 'idle' | 'pending' | 'success' | 'error';
 
-  const fetch = useCallback(() => {
-    fn().then(setData);
-  }, []);
+// function useFetch(fn) {
+//   const [data, setData] = useState();
 
-  return { data, fetch };
-}
+//   const [fetchState, setFetchState] = useState<FetchState>('idle');
 
-function EventEdit(props) {
+//   const fetch = useCallback(() => {
+//     fn().then(setData);
+//   }, []);
+
+//   return { data, fetch, isPending: fetchState === 'pending' };
+// }
+
+export default function EventEdit() {
   const params = useParams();
-  const events = useEvents();
+  const event = useSelector(({ events: { one: event } }) => event);
 
-  const handleFetchRaw = useCallback(() => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getOne(params.event_id));
+  }, [dispatch, params.event_id]);
+
+  const methods = useForm({
+    defaultValues: {
+      name: '',
+    },
+  });
+
+  const { reset } = methods;
+
+  useEffect(() => {
+    reset(event);
+  }, [event, reset]);
+
+  const onSubmit = (data) => {
     debugger;
-    return events?.read(params.event_id);
-  }, []);
+    console.log(data);
+  };
 
-  const { data, fetch } = useFetch(handleFetchRaw);
-  const handleClick = useCallback(() => {
-    fetch();
-  }, []);
+  if (!event) {
+    return <CircularProgress />;
+  }
 
   return (
     <>
-      Hello
-      <pre>{JSON.stringify({ data, params }, null, 2)}</pre>
-      <button type="button" onClick={handleClick}>Fetch</button>
+      <Header />
+      <Paper>
+
+        <FormProvider {...methods}>
+          <FormInputText name="name" label="Name" />
+        </FormProvider>
+
+        Hello
+        <pre>{JSON.stringify(event, null, 2)}</pre>
+        <button type="submit">Fetch</button>
+        {/* <button type="button" onClick={reset(onSubmit)}>Reset</button> */}
+        {/* <form onSubmit={handleSubmit(onSubmit)} /> */}
+      </Paper>
     </>
   );
 }
-
-export default EventEdit;
 
 // class Events extends Component {
 //   state = {
