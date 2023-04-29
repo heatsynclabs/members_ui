@@ -12,9 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { combineReducers } from 'redux';
+// @ts-ignore
+import { promiseMiddleware } from 'cooldux';
+import {
+  combineReducers, applyMiddleware, createStore, compose,
+} from 'redux';
+import thunkMiddleware from 'redux-thunk';
 
-import user from './user';
+import user, { verify } from './user';
 import stats from './stats';
 import certs from './certs';
 import userCerts from './userCerts';
@@ -29,3 +34,9 @@ const reducers = combineReducers({
 });
 
 export default reducers;
+
+// eslint-disable-next-line no-underscore-dangle
+const composeEnhancers = window.__REX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+export const store = createStore(reducers, composeEnhancers(applyMiddleware(thunkMiddleware, promiseMiddleware)));
+
+store.dispatch(verify());

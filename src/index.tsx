@@ -31,6 +31,7 @@ import { verify } from './state/user';
 import './index.css';
 import theme from './theme';
 import AuthWrapper from './components/auth-wrapper';
+import EventEdit from './pages/event_edit';
 
 // @ts-ignore
 const composeEnhancers = window.__REX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -60,6 +61,7 @@ root.render(
           <Route path="/users/:id" element={<AuthWrapper><UserDetails /></AuthWrapper>} />
           <Route path="/events" element={<AuthWrapper><Events /></AuthWrapper>} />
           <Route path="/events/:event_id" element={<AuthWrapper><Event /></AuthWrapper>} />
+          <Route path="/events/:event_id/edit" element={<AuthWrapper><EventEdit /></AuthWrapper>} />
           <Route path="/certs" element={<AuthWrapper><Certs /></AuthWrapper>}/>
           <Route path="/certs/:id" element={<AuthWrapper><CertDetails /></AuthWrapper>} />
 		</Routes>

@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import Header from '../components/header';
 import { colors } from '../lib/styles';
 import { getAll, formatDateRange } from '../state/events';
-
-const actionCreators = { getAll };
 
 const baseStyles = {
   container: {
@@ -42,25 +40,27 @@ const baseStyles = {
     border: '1px solid black',
     borderRadius: '1em',
     padding: '0.5em',
-    margin: '0.5em'
-  }
+    margin: '0.5em',
+  },
 };
 
-class App extends Component {
-  componentDidMount() {
-    this.props.getAll();
-  }
+export default function Events() {
+  const dispatch = useDispatch();
 
-  render() {
-    const { events } = this.props;
-    let allEventList = '';
+  const events = useSelector(({ events: { getAll: events } }) => events);
 
-    if (events.all) {
-      allEventList = (
+  useEffect(() => {
+    dispatch(getAll());
+  }, [dispatch]);
+
+  return (
+    <div style={baseStyles.container}>
+      <Header />
+      {events ? (
         <div>
           <h2>All Events</h2>
           <div>
-            {events.all.map((e) => {
+            {events.map((e) => {
               const dateRange = formatDateRange(e);
               return (
                 <div key={e.id} style={baseStyles.card}>
@@ -78,21 +78,7 @@ class App extends Component {
             })}
           </div>
         </div>
-      );
-    }
-
-    return (
-      <div style={baseStyles.container}>
-        <Header />
-        {allEventList}
-      </div>
-    );
-  }
+      ) : null}
+    </div>
+  );
 }
-
-function mapStateToProps(state) {
-  const { events } = state;
-  return { events };
-}
-
-export default connect(mapStateToProps, actionCreators)(App);

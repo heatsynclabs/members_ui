@@ -8,6 +8,7 @@ const duck = makeDuck({
 
 export const { browseAll, browse, initialStateCombined } = duck;
 
+// eslint-disable-next-line default-param-last
 const reducer = resetReducer(initialStateCombined, (state = initialStateCombined, action) => {
   return duck.reducerCombined(state, action);
 });

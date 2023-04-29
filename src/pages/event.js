@@ -37,7 +37,7 @@ class App extends Component {
     // const event = this.props.getOne(1); //this.props.match.params.event_id
 
     let eventList = '';
-    const ev = events.one;
+    const ev = events.getOne;
 
     if (ev) {
       const dateRange = formatDateRange(ev);
