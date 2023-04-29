@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CircularProgress, Paper } from '@mui/material';
-import { getOne } from '../state/events';
+import { edit, getOne } from '../state/events';
 import FormInputText from '../components/form/FormInputText';
 import Header from '../components/header';
 // import { connect } from 'react-redux';
@@ -81,9 +81,8 @@ export default function EventEdit() {
     reset(event);
   }, [event, reset]);
 
-  const onSubmit = (data) => {
-    debugger;
-    console.log(data);
+  const onSubmit = (updatedEvent) => {
+    dispatch(edit(params.event_id, updatedEvent));
   };
 
   if (!event) {
@@ -96,14 +95,16 @@ export default function EventEdit() {
       <Paper>
 
         <FormProvider {...methods}>
-          <FormInputText name="name" label="Name" />
+          <form id="eventForm" onSubmit={methods.handleSubmit(onSubmit)}>
+            <FormInputText name="name" label="Name" />
+          </form>
         </FormProvider>
 
         Hello
         <pre>{JSON.stringify(event, null, 2)}</pre>
-        <button type="submit">Fetch</button>
+        <button form="eventForm" type="submit">Submit</button>
+
         {/* <button type="button" onClick={reset(onSubmit)}>Reset</button> */}
-        {/* <form onSubmit={handleSubmit(onSubmit)} /> */}
       </Paper>
     </>
   );
