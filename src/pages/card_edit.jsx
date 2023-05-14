@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CircularProgress, MenuItem, Paper, Select } from '@mui/material';
+import { Button, CircularProgress, MenuItem, Paper, Select } from '@mui/material';
 import { edit, getOne } from '../state/cards';
 import { getAll } from '../state/user';
 import FormInputText from '../components/form/FormInputText';
@@ -31,19 +31,14 @@ export default function CardEdit() {
     },
   });
 
-  const { reset } = methods;
-
-  useEffect(() => {
-    reset(card);
-  }, [card, reset]);
-
-  const [selectedUser, setSelectedUser] = useState(null);
+  const { reset, setValue } = methods;
 
   useEffect(() => {
     if (card) {
-      setSelectedUser(card.user_id);
+      reset(card);
+      setValue('user_id', card.user_id); // set the value of 'user_id' when the card data is available
     }
-  }, [card]);
+  }, [card, reset, setValue]);
 
   const onSubmit = (updatedCard) => {
     dispatch(edit(params.card_id, {
@@ -64,7 +59,7 @@ export default function CardEdit() {
       <Paper>
         <FormProvider {...methods}>
           <form id="cardForm" onSubmit={methods.handleSubmit(onSubmit)}>
-            <Select name="user_id" label="User" value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)}>
+            <Select name="user_id" label="User" value={methods.watch('user_id')} onChange={(e) => setValue('user_id', e.target.value)}>
               <MenuItem value="">Select a user...</MenuItem>
               {users.map((user) => (
                 <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
@@ -74,11 +69,8 @@ export default function CardEdit() {
             <FormInputText name="permissions" label="Permissions" />
             <FormInputText name="note" label="Note" />
           </form>
+          <Button form="cardForm" type="submit">Submit</Button>
         </FormProvider>
-
-        Hello
-        <pre>{JSON.stringify(card, null, 2)}</pre>
-        <button form="cardForm" type="submit">Submit</button>
       </Paper>
     </>
   );

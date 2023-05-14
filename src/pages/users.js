@@ -70,7 +70,7 @@ const columns = [
     align: 'left',
     width: 200,
     renderCell: (params) => {
-      return <Link to={`/users/${params.id}`}>{params.value}</Link>;
+      return <Link to={`/users/${params.id}`}>{params.value || 'NO NAME SET'}</Link>;
     },
   },
   {

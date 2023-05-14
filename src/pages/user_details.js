@@ -74,10 +74,10 @@ class App extends Component {
     return (
       <div style={styles.container}>
         <Header />
-        <h2>All People</h2>
 
-        {aUser ? (
+        {aUser && aUser.user_cards ? (
           <>
+            <h2>{ aUser.name }</h2>
             <TableContainer style={styles.tableContainer}>
               <Table aria-label="simple table">
                 <TableHead>
