@@ -104,6 +104,24 @@ class App extends Component {
             </TableContainer>
             <div style={styles.cards}>
               <Card style={styles.card}>
+                <CardHeader title="Cards:" />
+                <CardContent>
+                  {aUser.user_cards.length ? (
+                    <ul>
+                      {map(aUser.user_cards, (c, idx) => (
+                        <li>
+                          <Link key={c.f1} to={`/cards/${c.f1}/edit`}>{c.f2}</Link>
+                          <br/>
+                          {c.f3}
+                          <br/>
+                          Permission: {c.f4}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (<span>None yet.</span>)}
+                </CardContent>
+              </Card>
+              <Card style={styles.card}>
                 <CardHeader title="Certifications:" />
                 <CardContent>
                   {aUser.user_certs.length ? (

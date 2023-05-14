@@ -19,17 +19,19 @@ import {
 } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
-import user, { verify } from './user';
-import stats from './stats';
+import cards from './cards';
 import certs from './certs';
-import userCerts from './userCerts';
 import events from './events';
+import stats from './stats';
+import user, { verify } from './user';
+import userCerts from './userCerts';
 
 const reducers = combineReducers({
-  user,
-  stats,
+  cards,
   certs,
   events,
+  stats,
+  user,
   userCerts,
 });
 
